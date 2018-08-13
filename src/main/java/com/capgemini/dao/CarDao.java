@@ -1,21 +1,17 @@
 package com.capgemini.dao;
 
 import java.util.List;
+import java.util.Set;
 
 import com.capgemini.domain.CarEntity;
+import com.capgemini.domain.EmployeeEntity;
 
 public interface CarDao extends Dao<CarEntity, Long> {
 
-	CarEntity addCarEntity(CarEntity carEntity);
-	CarEntity removeCarEntity(CarEntity carEntity);
-	CarEntity removeCarEntityByCarId(Long carId);
-	CarEntity changeDetailsOfCarEntity(Long carId, CarEntity newDetailsCarEntity);
-	
-	
-	List<CarEntity> findCarByBrand(String brand);
-
-	List<CarEntity> findCarByOffice(Long officeId);
-	List<CarEntity> findCarByType(String type);
+	List<CarEntity> findCarByBrandAndType(String brand, String type);
+	Set<CarEntity> findCarByOffice(Long officeId);
+	CarEntity addAttachedEmployee(Long carId, EmployeeEntity employeeEntity);
+	Set<CarEntity> findCarByEmployee(Long employeeId);
 	
 
 }
