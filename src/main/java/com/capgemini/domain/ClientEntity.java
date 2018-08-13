@@ -2,6 +2,9 @@ package com.capgemini.domain;
 
 import java.io.Serializable;
 import java.sql.Date;
+import java.util.HashSet;
+import java.util.NoSuchElementException;
+import java.util.Set;
 
 import javax.persistence.*;
 
@@ -17,12 +20,9 @@ public class ClientEntity {
 	private String firstName;
 	@Column(nullable = false, length = 30)
 	private String lastName;
-	@Column(nullable = false, length = 30)
-	private String streetAdress;
-	@Column(nullable = false, length = 30)
-	private String city;
-	@Column(nullable = false, length = 30)
-	private String zipCode;
+	@Column(nullable = false)
+	@Embedded
+	private AddressEntity address;
 	@Column(nullable = false)
 	private Date dateOfBirth;
 	@Column(nullable = false)
@@ -32,30 +32,27 @@ public class ClientEntity {
 	@Column(nullable = false)
 	private Long creditCardNumber;
 
+	@OneToMany(mappedBy = "client")
+	private Set<CarLoanEntity> carLoansSet = new HashSet<>();
+
 	public ClientEntity() {
 	}
 
-	public ClientEntity(Long id, String firstName, String lastName, String streetAdress, String city, String zipCode,
-			Date dateOfBirth, Integer phoneNumber, String email, Long creditCardNumber) {
+	public ClientEntity(String firstName, String lastName, AddressEntity address, Date dateOfBirth, Integer phoneNumber,
+			String email, Long creditCardNumber, Set<CarLoanEntity> carLoansSet) {
 		super();
-		this.id = id;
 		this.firstName = firstName;
 		this.lastName = lastName;
-		this.streetAdress = streetAdress;
-		this.city = city;
-		this.zipCode = zipCode;
+		this.address = address;
 		this.dateOfBirth = dateOfBirth;
 		this.phoneNumber = phoneNumber;
 		this.email = email;
 		this.creditCardNumber = creditCardNumber;
+		this.carLoansSet = carLoansSet;
 	}
 
 	public Long getId() {
 		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
 	}
 
 	public String getFirstName() {
@@ -74,28 +71,12 @@ public class ClientEntity {
 		this.lastName = lastName;
 	}
 
-	public String getStreetAdress() {
-		return streetAdress;
+	public AddressEntity getAddress() {
+		return address;
 	}
 
-	public void setStreetAdress(String streetAdress) {
-		this.streetAdress = streetAdress;
-	}
-
-	public String getCity() {
-		return city;
-	}
-
-	public void setCity(String city) {
-		this.city = city;
-	}
-
-	public String getZipCode() {
-		return zipCode;
-	}
-
-	public void setZipCode(String zipCode) {
-		this.zipCode = zipCode;
+	public void setAddress(AddressEntity address) {
+		this.address = address;
 	}
 
 	public Date getDateOfBirth() {
@@ -130,4 +111,23 @@ public class ClientEntity {
 		this.creditCardNumber = creditCardNumber;
 	}
 
+	public Set<CarLoanEntity> getCarLoansSet() {
+		return carLoansSet;
+	}
+
+	public void setCarLoansSet(Set<CarLoanEntity> carLoansSet) {
+		this.carLoansSet = carLoansSet;
+	}
+
+	public void addCarLoanEntity(CarLoanEntity carLoanEntity) {
+		carLoansSet.add(carLoanEntity);
+	}
+
+	public CarLoanEntity removeCarLoanEntity(CarLoanEntity carLoanEntity) {
+		if (carLoansSet.remove(carLoanEntity)) {
+			return carLoanEntity;
+		} else {
+			throw new NoSuchElementException();
+		}
+	}
 }

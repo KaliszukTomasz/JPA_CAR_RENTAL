@@ -2,7 +2,19 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4ded1a46-bab3-416e-8936-a97f9c09bde0" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/capgemini/dao/EmployeeDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/capgemini/dao/EmployeeDao.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/capgemini/dao/OfficeDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/capgemini/dao/OfficeDao.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/capgemini/dao/impl/CarDaoImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/capgemini/dao/impl/CarDaoImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/capgemini/domain/CarEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/capgemini/domain/CarEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/capgemini/domain/CarLoanEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/capgemini/domain/CarLoanEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/capgemini/domain/ClientEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/capgemini/domain/ClientEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/capgemini/domain/EmployeeEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/capgemini/domain/EmployeeEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/capgemini/domain/OfficeEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/capgemini/domain/OfficeEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/capgemini/service/CarService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/capgemini/service/CarService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/capgemini/types/EmployeeTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/capgemini/types/EmployeeTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/META-INF/maven/com.capgemini/starter-kit-jpa-starter/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/META-INF/maven/com.capgemini/starter-kit-jpa-starter/pom.xml" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -15,7 +27,7 @@
     <session id="1656375507">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="1" />
+          <entry key="project.closed" value="2" />
           <entry key="project.open.time.0" value="1" />
           <entry key="project.open.time.17" value="1" />
           <entry key="project.opened" value="2" />

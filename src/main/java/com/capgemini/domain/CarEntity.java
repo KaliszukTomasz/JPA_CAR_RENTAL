@@ -3,10 +3,13 @@ package com.capgemini.domain;
 import java.io.Serializable;
 import java.time.Year;
 import java.util.HashSet;
+import java.util.NoSuchElementException;
 import java.util.Set;
 
 import javax.persistence.*;
 
+@Entity
+@Table(name = "Cars")
 public class CarEntity {
 	private static final long serialVersionUID = 1L;
 
@@ -27,23 +30,50 @@ public class CarEntity {
 	private Integer enginePower;
 	@Column(nullable = false)
 	private Integer mileage;
-	@Column(nullable = false)
-	private Long currentLocation;
+
+	@ManyToOne
+	private OfficeEntity currentLocation;
+
+	@OneToMany(mappedBy = "car")
+	private Set<CarLoanEntity> carLoans = new HashSet<>();
 
 	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinTable(name = "Car_attachment", joinColumns = {
 			@JoinColumn(name = "Car_ID", nullable = false, updatable = false) }, inverseJoinColumns = {
 					@JoinColumn(name = "Employee_ID", nullable = false, updatable = false) })
-	private Set<EmployeeEntity> employeesSet = new HashSet<>();
-	
-	
+	Set<EmployeeEntity> employeesSet = new HashSet<>();
+
+	public void addCarLoan(CarLoanEntity carLoanEntity) {
+		carLoans.add(carLoanEntity);
+	}
+
+	public CarLoanEntity removeCarLoanEntity(CarLoanEntity carLoanEntity) {
+		if (carLoans.remove(carLoanEntity)) // TODO czy to się wykona?!
+		{
+			return carLoanEntity;
+		} else
+			throw new NoSuchElementException();
+	}
+
+	public void addEmployeeEntityToCarEntity(EmployeeEntity employeeEntity) {
+		employeesSet.add(employeeEntity);
+	}
+
+	public EmployeeEntity removeEmployeeEntityFromCarEntity(EmployeeEntity employeeEntity) {
+		if (employeesSet.remove(employeeEntity)) {
+			return employeeEntity;
+		} else {
+			throw new NoSuchElementException();
+		}
+	}
+
 	public CarEntity() {
 	}
 
-	public CarEntity(Long id, String carType, String brand, Year yearOfProduction, String color, Integer engineCapacity,
-			Integer enginePower, Integer mileage, Long currentLocation) {
+	public CarEntity(String carType, String brand, Year yearOfProduction, String color, Integer engineCapacity,
+			Integer enginePower, Integer mileage, OfficeEntity currentLocation, Set<CarLoanEntity> carLoans,
+			Set<EmployeeEntity> employeesSet) {
 		super();
-		this.id = id;
 		this.carType = carType;
 		this.brand = brand;
 		this.yearOfProduction = yearOfProduction;
@@ -52,14 +82,12 @@ public class CarEntity {
 		this.enginePower = enginePower;
 		this.mileage = mileage;
 		this.currentLocation = currentLocation;
+		this.carLoans = carLoans;
+		this.employeesSet = employeesSet;
 	}
 
 	public Long getId() {
 		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
 	}
 
 	public String getCarType() {
@@ -118,12 +146,20 @@ public class CarEntity {
 		this.mileage = mileage;
 	}
 
-	public Long getCurrentLocation() {
+	public OfficeEntity getCurrentLocation() {
 		return currentLocation;
 	}
 
-	public void setCurrentLocation(Long currentLocation) {
+	public void setCurrentLocation(OfficeEntity currentLocation) {
 		this.currentLocation = currentLocation;
+	}
+
+	public Set<CarLoanEntity> getCarLoans() {
+		return carLoans;
+	}
+
+	public void setCarLoans(Set<CarLoanEntity> carLoans) {
+		this.carLoans = carLoans;
 	}
 
 	public Set<EmployeeEntity> getEmployeesSet() {

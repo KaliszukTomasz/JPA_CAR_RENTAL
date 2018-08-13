@@ -7,36 +7,37 @@ import javax.persistence.*;
 
 import org.hibernate.type.DateType;
 
+@Entity
+@Table(name = "Car_Loans")
 public class CarLoanEntity {
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
-	@Column(nullable = false)
-	private Long carId;
-	@Column(nullable = false)
-	private Long clientId;
+	@ManyToOne
+	private CarEntity car;
+	@ManyToOne
+	private ClientEntity client;
 	@Column(nullable = false)
 	private DateType loanDate;
 	@Column(nullable = false)
 	private DateType returnDate;
-	@Column(nullable = false)
-	private Long loanOffice;
-	@Column(nullable = false)
-	private Long returnOffice;
+	@ManyToOne
+	private OfficeEntity loanOffice;
+	@ManyToOne
+	private OfficeEntity returnOffice;
 	@Column(nullable = false)
 	private Integer amountOfLoan;
 
 	public CarLoanEntity() {
 	}
 
-	public CarLoanEntity(Long id, Long carId, Long clientId, DateType loanDate, DateType returnDate, Long loanOffice,
-			Long returnOffice, Integer amountOfLoan) {
+	public CarLoanEntity(CarEntity car, ClientEntity client, DateType loanDate, DateType returnDate,
+			OfficeEntity loanOffice, OfficeEntity returnOffice, Integer amountOfLoan) {
 		super();
-		this.id = id;
-		this.carId = carId;
-		this.clientId = clientId;
+		this.car = car;
+		this.client = client;
 		this.loanDate = loanDate;
 		this.returnDate = returnDate;
 		this.loanOffice = loanOffice;
@@ -48,24 +49,20 @@ public class CarLoanEntity {
 		return id;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public CarEntity getCar() {
+		return car;
 	}
 
-	public Long getCarId() {
-		return carId;
+	public void setCar(CarEntity car) {
+		this.car = car;
 	}
 
-	public void setCarId(Long carId) {
-		this.carId = carId;
+	public ClientEntity getClient() {
+		return client;
 	}
 
-	public Long getClientId() {
-		return clientId;
-	}
-
-	public void setClientId(Long clientId) {
-		this.clientId = clientId;
+	public void setClient(ClientEntity client) {
+		this.client = client;
 	}
 
 	public DateType getLoanDate() {
@@ -84,19 +81,19 @@ public class CarLoanEntity {
 		this.returnDate = returnDate;
 	}
 
-	public Long getLoanOffice() {
+	public OfficeEntity getLoanOffice() {
 		return loanOffice;
 	}
 
-	public void setLoanOffice(Long loanOffice) {
+	public void setLoanOffice(OfficeEntity loanOffice) {
 		this.loanOffice = loanOffice;
 	}
 
-	public Long getReturnOffice() {
+	public OfficeEntity getReturnOffice() {
 		return returnOffice;
 	}
 
-	public void setReturnOffice(Long returnOffice) {
+	public void setReturnOffice(OfficeEntity returnOffice) {
 		this.returnOffice = returnOffice;
 	}
 

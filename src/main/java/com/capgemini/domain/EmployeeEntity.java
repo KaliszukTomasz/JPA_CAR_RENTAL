@@ -1,11 +1,20 @@
 package com.capgemini.domain;
 
-import java.io.Serializable;
 import java.util.Date; //TODO czy uzyc daty sql?
 import java.util.HashSet;
+import java.util.NoSuchElementException;
 import java.util.Set;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "Employees")
@@ -21,22 +30,24 @@ public class EmployeeEntity {
 	private String lastName;
 	@Column(nullable = false)
 	private Date dateOfBirth;
-	
-	@ManyToMany(mappedBy = "CarEntity",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinTable(name = "Car_attachment", joinColumns = {
-			@JoinColumn(name = "Employee_ID", nullable = false, updatable = false) }, inverseJoinColumns = {
-					@JoinColumn(name = "Car_ID", nullable = false, updatable = false) })
+
+	@ManyToOne
+	private OfficeEntity office;
+
+	@ManyToMany(mappedBy = "employeesSet", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<CarEntity> carsSet = new HashSet<>();
-	
+
 	public EmployeeEntity() {
 	}
 
-	public EmployeeEntity(Long id, String firstName, String lastName, Date dateOfBirth) {
+	public EmployeeEntity(String firstName, String lastName, Date dateOfBirth, OfficeEntity office,
+			Set<CarEntity> carsSet) {
 		super();
-		this.id = id;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.dateOfBirth = dateOfBirth;
+		this.office = office;
+		this.carsSet = carsSet;
 	}
 
 	public Long getId() {
@@ -69,6 +80,34 @@ public class EmployeeEntity {
 
 	public void setDateOfBirth(Date dateOfBirth) {
 		this.dateOfBirth = dateOfBirth;
+	}
+
+	public OfficeEntity getOffice() {
+		return office;
+	}
+
+	public void setOffice(OfficeEntity office) {
+		this.office = office;
+	}
+
+	public Set<CarEntity> getCarsSet() {
+		return carsSet;
+	}
+
+	public void setCarsSet(Set<CarEntity> carsSet) {
+		this.carsSet = carsSet;
+	}
+
+	public void addCarEntity(CarEntity carEntity) {
+		carsSet.add(carEntity);
+	}
+
+	public CarEntity removeCarEntity(CarEntity carEntity) {
+		if (carsSet.remove(carEntity)) {
+			return carEntity;
+		} else {
+			throw new NoSuchElementException();
+		}
 	}
 
 }
