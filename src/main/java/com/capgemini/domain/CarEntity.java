@@ -2,6 +2,8 @@ package com.capgemini.domain;
 
 import java.io.Serializable;
 import java.time.Year;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.*;
 
@@ -28,6 +30,13 @@ public class CarEntity {
 	@Column(nullable = false)
 	private Long currentLocation;
 
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JoinTable(name = "Car_attachment", joinColumns = {
+			@JoinColumn(name = "Car_ID", nullable = false, updatable = false) }, inverseJoinColumns = {
+					@JoinColumn(name = "Employee_ID", nullable = false, updatable = false) })
+	private Set<EmployeeEntity> employeesSet = new HashSet<>();
+	
+	
 	public CarEntity() {
 	}
 
@@ -117,5 +126,12 @@ public class CarEntity {
 		this.currentLocation = currentLocation;
 	}
 
-	
+	public Set<EmployeeEntity> getEmployeesSet() {
+		return employeesSet;
+	}
+
+	public void setEmployeesSet(Set<EmployeeEntity> employeesSet) {
+		this.employeesSet = employeesSet;
+	}
+
 }
