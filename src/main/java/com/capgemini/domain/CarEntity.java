@@ -31,10 +31,10 @@ public class CarEntity {
 	@Column(nullable = false)
 	private Integer mileage;
 
-	@ManyToOne
+	@ManyToOne(cascade=CascadeType.ALL)
 	private OfficeEntity currentLocation;
 
-	@OneToMany(mappedBy = "car")
+	@OneToMany(mappedBy = "car", cascade = CascadeType.ALL)
 	private Set<CarLoanEntity> carLoans = new HashSet<>();
 
 	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -43,29 +43,6 @@ public class CarEntity {
 					@JoinColumn(name = "Employee_ID", nullable = false, updatable = false) })
 	Set<EmployeeEntity> employeesSet = new HashSet<>();
 
-	public void addCarLoan(CarLoanEntity carLoanEntity) {
-		carLoans.add(carLoanEntity);
-	}
-
-	public CarLoanEntity removeCarLoanEntity(CarLoanEntity carLoanEntity) {
-		if (carLoans.remove(carLoanEntity)) // TODO czy to się wykona?!
-		{
-			return carLoanEntity;
-		} else
-			throw new NoSuchElementException();
-	}
-
-	public void addEmployeeEntityToCarEntity(EmployeeEntity employeeEntity) {
-		employeesSet.add(employeeEntity);
-	}
-
-	public EmployeeEntity removeEmployeeEntityFromCarEntity(EmployeeEntity employeeEntity) {
-		if (employeesSet.remove(employeeEntity)) {
-			return employeeEntity;
-		} else {
-			throw new NoSuchElementException();
-		}
-	}
 
 	public CarEntity() {
 	}
@@ -169,5 +146,30 @@ public class CarEntity {
 	public void setEmployeesSet(Set<EmployeeEntity> employeesSet) {
 		this.employeesSet = employeesSet;
 	}
+	
+	public void addCarLoan(CarLoanEntity carLoanEntity) {
+		carLoans.add(carLoanEntity);
+		carLoanEntity.setCar(this);
+	}
 
+	public CarLoanEntity removeCarLoanEntity(CarLoanEntity carLoanEntity) {
+		if (carLoans.remove(carLoanEntity))
+		{
+			return carLoanEntity;
+		} else
+			throw new NoSuchElementException();
+	}
+
+	public void addEmployeeEntityToCarEntity(EmployeeEntity employeeEntity) {
+		employeesSet.add(employeeEntity);
+//		employeeEntity.addCarEntity(this);
+	}
+
+	public EmployeeEntity removeEmployeeEntityFromCarEntity(EmployeeEntity employeeEntity) {
+		if (employeesSet.remove(employeeEntity)) {
+			return employeeEntity;
+		} else {
+			throw new NoSuchElementException();
+		}
+	}
 }

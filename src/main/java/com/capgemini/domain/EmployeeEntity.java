@@ -31,7 +31,7 @@ public class EmployeeEntity {
 	@Column(nullable = false)
 	private Date dateOfBirth;
 
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.ALL)
 	private OfficeEntity office;
 
 	@ManyToMany(mappedBy = "employeesSet", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -100,6 +100,7 @@ public class EmployeeEntity {
 
 	public void addCarEntity(CarEntity carEntity) {
 		carsSet.add(carEntity);
+		//TODO czy tutaj trzeba dodawac z drugiej strony?
 	}
 
 	public CarEntity removeCarEntity(CarEntity carEntity) {

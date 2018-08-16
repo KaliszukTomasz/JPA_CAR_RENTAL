@@ -15,17 +15,17 @@ public class CarLoanEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.ALL)
 	private CarEntity car;
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.ALL)
 	private ClientEntity client;
 	@Column(nullable = false)
 	private DateType loanDate;
 	@Column(nullable = false)
 	private DateType returnDate;
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.ALL)
 	private OfficeEntity loanOffice;
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.ALL)
 	private OfficeEntity returnOffice;
 	@Column(nullable = false)
 	private Integer amountOfLoan;

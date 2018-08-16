@@ -32,7 +32,7 @@ public class ClientEntity {
 	@Column(nullable = false)
 	private Long creditCardNumber;
 
-	@OneToMany(mappedBy = "client")
+	@OneToMany(mappedBy = "client" , cascade = CascadeType.ALL)
 	private Set<CarLoanEntity> carLoansSet = new HashSet<>();
 
 	public ClientEntity() {
@@ -121,6 +121,7 @@ public class ClientEntity {
 
 	public void addCarLoanEntity(CarLoanEntity carLoanEntity) {
 		carLoansSet.add(carLoanEntity);
+		carLoanEntity.setClient(this);
 	}
 
 	public CarLoanEntity removeCarLoanEntity(CarLoanEntity carLoanEntity) {

@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -25,20 +26,20 @@ public class OfficeEntity {
 	private Integer phoneNumber;
 	@Column(nullable = false, length = 30)
 	private String email;
-	@Column(nullable = false)
+//	@Column(nullable = false)
 	@Embedded
 	private AddressEntity address;
 
-	@OneToMany(mappedBy = "office")
+	@OneToMany(mappedBy = "office", cascade = CascadeType.ALL)
 	private Set<EmployeeEntity> employees = new HashSet<>();
 
-	@OneToMany(mappedBy = "loanOffice")
+	@OneToMany(mappedBy = "loanOffice", cascade = CascadeType.ALL)
 	private Set<CarLoanEntity> carLoansFromOffice = new HashSet<>();
 
-	@OneToMany(mappedBy = "returnOffice")
+	@OneToMany(mappedBy = "returnOffice", cascade = CascadeType.ALL)
 	private Set<CarLoanEntity> carReturnsToOffice = new HashSet<>();
 
-	@OneToMany(mappedBy = "currentLocation")
+	@OneToMany(mappedBy = "currentLocation", cascade = CascadeType.ALL)
 	private Set<CarEntity> carEntitySet = new HashSet<>();
 
 	public OfficeEntity() {
@@ -122,6 +123,7 @@ public class OfficeEntity {
 
 	public void addCarEntityToCurrentLocation(CarEntity carEntity) {
 		carEntitySet.add(carEntity);
+		carEntity.setCurrentLocation(this);
 	}
 
 	public CarEntity removeCarEntityFromCurrentLocation(CarEntity carEntity) {
@@ -134,6 +136,7 @@ public class OfficeEntity {
 
 	public void addCarLoanEntityFromOffice(CarLoanEntity carLoanEntity) {
 		carLoansFromOffice.add(carLoanEntity);
+		carLoanEntity.setLoanOffice(this);
 	}
 
 	public CarLoanEntity removeCarLoanToOffice(CarLoanEntity carLoanEntity) {
@@ -146,6 +149,7 @@ public class OfficeEntity {
 
 	public void addCarReturnLoanEntityToOffice(CarLoanEntity carLoanEntity) {
 		carReturnsToOffice.add(carLoanEntity);
+		carLoanEntity.setReturnOffice(this);
 	}
 
 	public CarLoanEntity removeReturnCarLoanToOffice(CarLoanEntity carLoanEntity) {
@@ -158,6 +162,7 @@ public class OfficeEntity {
 
 	public void addEmployeeEntity(EmployeeEntity employeeEntity) {
 		employees.add(employeeEntity);
+		employeeEntity.setOffice(this);
 	}
 
 	public EmployeeEntity removeEmployeeEntity(EmployeeEntity employeeEntity) {
