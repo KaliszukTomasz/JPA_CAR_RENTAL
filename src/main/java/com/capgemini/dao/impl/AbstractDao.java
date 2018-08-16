@@ -13,7 +13,7 @@ import javax.transaction.Transactional;
 
 import com.capgemini.dao.Dao;
 
-@Transactional(Transactional.TxType.SUPPORTS)
+@Transactional(Transactional.TxType.REQUIRED)
 public abstract class AbstractDao<T, K extends Serializable> implements Dao<T, K> {
 
     @PersistenceContext
