@@ -1,6 +1,8 @@
 package com.capgemini.types.builders;
 
-import org.hibernate.type.DateType;
+
+
+import java.util.Date;
 
 import com.capgemini.types.CarLoanTO;
 import com.capgemini.types.CarTO;
@@ -11,8 +13,8 @@ public class CarLoanTOBuilder {
 	private Long id;
 	private CarTO car;
 	private ClientTO client;
-	private DateType loanDate;
-	private DateType returnDate;
+	private Date loanDate;
+	private Date returnDate;
 	private OfficeTO loanOffice;
 	private OfficeTO returnOffice;
 	private Integer amountOfLoan;
@@ -32,12 +34,12 @@ public class CarLoanTOBuilder {
 		return this;
 	}
 
-	public CarLoanTOBuilder setLoanDate(DateType loanDate) {
+	public CarLoanTOBuilder setLoanDate(Date loanDate) {
 		this.loanDate = loanDate;
 		return this;
 	}
 
-	public CarLoanTOBuilder setReturnDate(DateType returnDate) {
+	public CarLoanTOBuilder setReturnDate(Date returnDate) {
 		this.returnDate = returnDate;
 		return this;
 	}
@@ -62,7 +64,7 @@ public class CarLoanTOBuilder {
 		return new CarLoanTO(id, car, client, loanDate, returnDate, loanOffice, returnOffice, amountOfLoan);
 	}
 
-	private void checkBeforeBuild(CarTO car, ClientTO client, DateType loanDate, OfficeTO loanOffice) {
+	private void checkBeforeBuild(CarTO car, ClientTO client, Date loanDate, OfficeTO loanOffice) {
 		if (car == null || client == null || loanDate == null || loanOffice == null) {
 			throw new RuntimeException("Incorrect officeTO to be created");
 		}

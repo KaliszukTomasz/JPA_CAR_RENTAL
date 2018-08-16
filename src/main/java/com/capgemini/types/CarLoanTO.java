@@ -1,21 +1,21 @@
 package com.capgemini.types;
 
-import org.hibernate.type.DateType;
+import java.util.Date;
 
 public class CarLoanTO {
 
 	private Long id;
 	private CarTO car;
 	private ClientTO client;
-	private DateType loanDate;
-	private DateType returnDate;
+	private Date loanDate;
+	private Date returnDate;
 	private OfficeTO loanOffice;
 	private OfficeTO returnOffice;
 	private Integer amountOfLoan;
 	
 	public CarLoanTO(){}
 
-	public CarLoanTO(Long id, CarTO car, ClientTO client, DateType loanDate, DateType returnDate, OfficeTO loanOffice,
+	public CarLoanTO(Long id, CarTO car, ClientTO client, Date loanDate, Date returnDate, OfficeTO loanOffice,
 			OfficeTO returnOffice, Integer amountOfLoan) {
 		super();
 		this.id = id;
@@ -52,19 +52,19 @@ public class CarLoanTO {
 		this.client = client;
 	}
 
-	public DateType getLoanDate() {
+	public Date getLoanDate() {
 		return loanDate;
 	}
 
-	public void setLoanDate(DateType loanDate) {
+	public void setLoanDate(Date loanDate) {
 		this.loanDate = loanDate;
 	}
 
-	public DateType getReturnDate() {
+	public Date getReturnDate() {
 		return returnDate;
 	}
 
-	public void setReturnDate(DateType returnDate) {
+	public void setReturnDate(Date returnDate) {
 		this.returnDate = returnDate;
 	}
 

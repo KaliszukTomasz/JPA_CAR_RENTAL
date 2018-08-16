@@ -1,6 +1,7 @@
 package com.capgemini.types;
 
 import java.time.Year;
+import java.util.HashSet;
 import java.util.Set;
 
 import com.capgemini.domain.EmployeeEntity;
@@ -16,14 +17,14 @@ public class CarTO {
 	private Integer engineCapacity;
 	private Integer enginePower;
 	private Integer mileage;
-	private OfficeEntity currentLocation;
-	private Set<EmployeeEntity> employeesSet;
+	private OfficeTO currentLocation;
+	private Set<EmployeeEntity> employeesSet = new HashSet<>();
 
 	public CarTO() {
 	}
 
 	public CarTO(Long id, String carType, String brand, Year yearOfProduction, String color, Integer engineCapacity,
-			Integer enginePower, Integer mileage, OfficeEntity currentLocation, Set<EmployeeEntity> employeesSet) {
+			Integer enginePower, Integer mileage, OfficeTO currentLocation, Set<EmployeeEntity> employeesSet) {
 		super();
 		this.id = id;
 		this.carType = carType;
@@ -101,11 +102,11 @@ public class CarTO {
 		this.mileage = mileage;
 	}
 
-	public OfficeEntity getCurrentLocation() {
+	public OfficeTO getCurrentLocation() {
 		return currentLocation;
 	}
 
-	public void setCurrentLocation(OfficeEntity currentLocation) {
+	public void setCurrentLocation(OfficeTO currentLocation) {
 		this.currentLocation = currentLocation;
 	}
 

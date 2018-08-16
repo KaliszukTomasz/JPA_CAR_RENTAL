@@ -1,7 +1,9 @@
 package com.capgemini.types;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Stream;
 
 public class OfficeTO {
 
@@ -93,6 +95,11 @@ public class OfficeTO {
 
 	public void setCarSet(Set<CarTO> carSet) {
 		this.carSet = carSet;
+	}
+	
+	public boolean checkIfEveryParamNotNullThenTrue(){
+		return !Stream.of(phoneNumber, email, address).allMatch(Objects::isNull);
+	
 	}
 	
 	
