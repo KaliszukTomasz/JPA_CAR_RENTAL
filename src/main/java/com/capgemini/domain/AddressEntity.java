@@ -1,11 +1,19 @@
 package com.capgemini.domain;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 @Embeddable
 public class AddressEntity {
-
+	
+	
 	@Column(nullable = false, length = 30)
 	private String city;
 	@Column(nullable = false, length = 30)

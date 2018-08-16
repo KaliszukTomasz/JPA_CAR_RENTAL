@@ -1,11 +1,20 @@
 package com.capgemini.domain;
 
-import java.io.Serializable;
-import java.sql.Date;
+import java.util.Date;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
-import org.hibernate.type.DateType;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
 @Table(name = "Car_Loans")
@@ -15,25 +24,26 @@ public class CarLoanEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne(cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
 	private CarEntity car;
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne(cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
 	private ClientEntity client;
 	@Column(nullable = false)
-	private DateType loanDate;
+	private Date loanDate;
 	@Column(nullable = false)
-	private DateType returnDate;
-	@ManyToOne(cascade = CascadeType.ALL)
+	private Date returnDate;
+	@ManyToOne(cascade = { CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
 	private OfficeEntity loanOffice;
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne(cascade = { CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
 	private OfficeEntity returnOffice;
 	@Column(nullable = false)
 	private Integer amountOfLoan;
 
+
 	public CarLoanEntity() {
 	}
 
-	public CarLoanEntity(CarEntity car, ClientEntity client, DateType loanDate, DateType returnDate,
+	public CarLoanEntity(CarEntity car, ClientEntity client, Date loanDate, Date returnDate,
 			OfficeEntity loanOffice, OfficeEntity returnOffice, Integer amountOfLoan) {
 		super();
 		this.car = car;
@@ -65,19 +75,19 @@ public class CarLoanEntity {
 		this.client = client;
 	}
 
-	public DateType getLoanDate() {
+	public Date getLoanDate() {
 		return loanDate;
 	}
 
-	public void setLoanDate(DateType loanDate) {
+	public void setLoanDate(Date loanDate) {
 		this.loanDate = loanDate;
 	}
 
-	public DateType getReturnDate() {
+	public Date getReturnDate() {
 		return returnDate;
 	}
 
-	public void setReturnDate(DateType returnDate) {
+	public void setReturnDate(Date returnDate) {
 		this.returnDate = returnDate;
 	}
 

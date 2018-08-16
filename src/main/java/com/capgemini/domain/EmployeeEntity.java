@@ -15,6 +15,11 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
 @Table(name = "Employees")
@@ -30,13 +35,16 @@ public class EmployeeEntity {
 	private String lastName;
 	@Column(nullable = false)
 	private Date dateOfBirth;
+	
 
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	private OfficeEntity office;
 
-	@ManyToMany(mappedBy = "employeesSet", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@ManyToMany(mappedBy = "employeesSet", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	private Set<CarEntity> carsSet = new HashSet<>();
 
+
+	
 	public EmployeeEntity() {
 	}
 

@@ -1,5 +1,6 @@
 package com.capgemini.domain;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.NoSuchElementException;
 import java.util.Set;
@@ -8,11 +9,17 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
 @Table(name = "Offices")
@@ -26,22 +33,24 @@ public class OfficeEntity {
 	private Integer phoneNumber;
 	@Column(nullable = false, length = 30)
 	private String email;
-//	@Column(nullable = false)
 	@Embedded
 	private AddressEntity address;
 
-	@OneToMany(mappedBy = "office", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "office",fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	private Set<EmployeeEntity> employees = new HashSet<>();
+	//TODO pracownicy mogą być bez biura!!!
 
 	@OneToMany(mappedBy = "loanOffice", cascade = CascadeType.ALL)
 	private Set<CarLoanEntity> carLoansFromOffice = new HashSet<>();
 
-	@OneToMany(mappedBy = "returnOffice", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "returnOffice",  cascade = CascadeType.ALL)
 	private Set<CarLoanEntity> carReturnsToOffice = new HashSet<>();
 
 	@OneToMany(mappedBy = "currentLocation", cascade = CascadeType.ALL)
 	private Set<CarEntity> carEntitySet = new HashSet<>();
 
+
+	
 	public OfficeEntity() {
 	}
 

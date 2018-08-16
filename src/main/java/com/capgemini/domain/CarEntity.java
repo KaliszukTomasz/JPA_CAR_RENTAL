@@ -2,11 +2,15 @@ package com.capgemini.domain;
 
 import java.io.Serializable;
 import java.time.Year;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
 import javax.persistence.*;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
 @Table(name = "Cars")
@@ -31,18 +35,19 @@ public class CarEntity {
 	@Column(nullable = false)
 	private Integer mileage;
 
-	@ManyToOne(cascade=CascadeType.ALL)
+	@ManyToOne(cascade={CascadeType.PERSIST, CascadeType.MERGE})
 	private OfficeEntity currentLocation;
 
-	@OneToMany(mappedBy = "car", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "car", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Set<CarLoanEntity> carLoans = new HashSet<>();
 
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
 	@JoinTable(name = "Car_attachment", joinColumns = {
 			@JoinColumn(name = "Car_ID", nullable = false, updatable = false) }, inverseJoinColumns = {
 					@JoinColumn(name = "Employee_ID", nullable = false, updatable = false) })
 	Set<EmployeeEntity> employeesSet = new HashSet<>();
 
+	
 
 	public CarEntity() {
 	}
