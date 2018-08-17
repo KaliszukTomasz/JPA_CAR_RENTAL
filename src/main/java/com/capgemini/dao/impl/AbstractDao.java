@@ -51,14 +51,19 @@ public abstract class AbstractDao<T, K extends Serializable> implements Dao<T, K
         return entityManager.merge(entity);
     }
 
+//    @Override
+//    public void delete(T entity) {
+//        entityManager.remove(entity);
+//        
+//    }
     @Override
     public void delete(T entity) {
-        entityManager.remove(entity);
+    entityManager.remove(entityManager.contains(entity) ? entity : entityManager.merge(entity));
     }
 
     @Override
     public void delete(K id) {
-        entityManager.remove(getOne(id));
+        entityManager.remove(findOne(id));
     }
 
     @Override
@@ -66,6 +71,11 @@ public abstract class AbstractDao<T, K extends Serializable> implements Dao<T, K
         entityManager.createQuery("delete " + getDomainClassName()).executeUpdate();
     }
 
+    @Override
+    public void flush() {
+    	entityManager.flush();
+    }
+    
     @Override
     public long count() {
         return (long) entityManager.createQuery("Select count(*) from " + getDomainClassName()).getSingleResult();

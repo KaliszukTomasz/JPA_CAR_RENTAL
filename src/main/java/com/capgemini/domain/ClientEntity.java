@@ -45,9 +45,19 @@ public class ClientEntity {
 	@Column(nullable = false)
 	private Long creditCardNumber;
 
-	@OneToMany(mappedBy = "client", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<CarLoanEntity> carLoansSet = new HashSet<>();
 
+	@CreationTimestamp
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "create_date")
+	private Date createDate;
+
+	@UpdateTimestamp
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "modify_date")
+	private Date modifyDate;
+	
 	public ClientEntity() {
 	}
 

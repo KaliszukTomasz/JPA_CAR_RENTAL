@@ -46,10 +46,11 @@ public class CarDaoImpl extends AbstractDao<CarEntity, Long> implements CarDao {
 	public CarEntity addAttachedEmployee(Long carId, EmployeeEntity employeeEntity) {
 		CarEntity carEntity = findOne(carId);
 		carEntity.addEmployeeEntityToCarEntity(employeeEntity);
-		EmployeeEntity newEmployeeEntity = employeeDao.findOne(employeeEntity.getId());
-		newEmployeeEntity.addCarEntity(carEntity);
-		update(carEntity);
-		employeeDao.update(newEmployeeEntity);
+		employeeEntity.addCarEntity(carEntity);
+//		EmployeeEntity newEmployeeEntity = employeeDao.findOne(employeeEntity.getId());
+//		newEmployeeEntity.addCarEntity(carEntity);
+//		update(carEntity);
+//		employeeDao.update(newEmployeeEntity);
 
 		return carEntity;
 	}

@@ -36,20 +36,28 @@ public class OfficeEntity {
 	@Embedded
 	private AddressEntity address;
 
-	@OneToMany(mappedBy = "office",fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+	@OneToMany(mappedBy = "office", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
 	private Set<EmployeeEntity> employees = new HashSet<>();
 	//TODO pracownicy mogą być bez biura!!!
 
-	@OneToMany(mappedBy = "loanOffice", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "loanOffice", cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<CarLoanEntity> carLoansFromOffice = new HashSet<>();
 
-	@OneToMany(mappedBy = "returnOffice",  cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "returnOffice",  cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<CarLoanEntity> carReturnsToOffice = new HashSet<>();
 
-	@OneToMany(mappedBy = "currentLocation", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "currentLocation", cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<CarEntity> carEntitySet = new HashSet<>();
 
+	@CreationTimestamp
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "create_date")
+	private Date createDate;
 
+	@UpdateTimestamp
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "modify_date")
+	private Date modifyDate;
 	
 	public OfficeEntity() {
 	}

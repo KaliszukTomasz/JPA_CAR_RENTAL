@@ -35,19 +35,28 @@ public class CarEntity {
 	@Column(nullable = false)
 	private Integer mileage;
 
+	
 	@ManyToOne(cascade={CascadeType.PERSIST, CascadeType.MERGE})
 	private OfficeEntity currentLocation;
 
-	@OneToMany(mappedBy = "car", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "car", cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<CarLoanEntity> carLoans = new HashSet<>();
 
-	@ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
+	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	@JoinTable(name = "Car_attachment", joinColumns = {
 			@JoinColumn(name = "Car_ID", nullable = false, updatable = false) }, inverseJoinColumns = {
 					@JoinColumn(name = "Employee_ID", nullable = false, updatable = false) })
 	Set<EmployeeEntity> employeesSet = new HashSet<>();
 
-	
+	@CreationTimestamp
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "create_date")
+	private Date createDate;
+
+	@UpdateTimestamp
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "modify_date")
+	private Date modifyDate;
 
 	public CarEntity() {
 	}
@@ -158,6 +167,9 @@ public class CarEntity {
 	}
 
 	public CarLoanEntity removeCarLoanEntity(CarLoanEntity carLoanEntity) {
+		System.out.println("                   "+carLoanEntity.getId());
+		System.out.println("                   "+carLoans.contains(carLoanEntity));
+		
 		if (carLoans.remove(carLoanEntity))
 		{
 			return carLoanEntity;
@@ -177,4 +189,14 @@ public class CarEntity {
 			throw new NoSuchElementException();
 		}
 	}
+	
+	public void removeCarLoan(CarLoanEntity carLoanEntity){
+		carLoans.remove(carLoanEntity);
+		carLoanEntity.setCar(null);
+				
+	}
+
+
+
+
 }

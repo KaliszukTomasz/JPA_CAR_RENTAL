@@ -43,7 +43,15 @@ public class EmployeeEntity {
 	@ManyToMany(mappedBy = "employeesSet", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	private Set<CarEntity> carsSet = new HashSet<>();
 
+	@CreationTimestamp
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "create_date")
+	private Date createDate;
 
+	@UpdateTimestamp
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "modify_date")
+	private Date modifyDate;
 	
 	public EmployeeEntity() {
 	}
@@ -108,7 +116,7 @@ public class EmployeeEntity {
 
 	public void addCarEntity(CarEntity carEntity) {
 		carsSet.add(carEntity);
-		//TODO czy tutaj trzeba dodawac z drugiej strony?
+//		carEntity.addEmployeeEntityToCarEntity(this);
 	}
 
 	public CarEntity removeCarEntity(CarEntity carEntity) {

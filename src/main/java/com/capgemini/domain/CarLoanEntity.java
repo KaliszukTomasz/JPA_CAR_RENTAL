@@ -39,7 +39,16 @@ public class CarLoanEntity {
 	@Column(nullable = false)
 	private Integer amountOfLoan;
 
+	@CreationTimestamp
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "create_date")
+	private Date createDate;
 
+	@UpdateTimestamp
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "modify_date")
+	private Date modifyDate;
+	
 	public CarLoanEntity() {
 	}
 
