@@ -46,7 +46,6 @@ import com.capgemini.types.builders.OfficeTOBuilder;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(properties = "spring.profiles.active=hsql")
-@DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 public class CarServiceTest {
 
 	@Autowired
@@ -61,81 +60,95 @@ public class CarServiceTest {
 	private OfficeService officeService;
 	@Autowired
 	private OfficeDao officeDao;
-	
 
 	@Test
 	public void shouldAddAndRemoveCarToFromDatabaseTest() {
 		// given
-		CarTO carTO = buildCarTO();
-		assertEquals(0, carService.findAllCarsInDatabase().size());
+		int carDaoStartSize = carService.findAllCarsInDatabase().size();
+
+		assertEquals(0, carService.findAllCarsInDatabase().size() - carDaoStartSize);
 		// when
-		carService.addCarToDatabase(carTO);
-		carService.addCarToDatabase(carTO);
+		CarTO carTO1 = carService.addCarToDatabase(buildCarTO());
+		CarTO carTO2 = carService.addCarToDatabase(buildCarTO());
 		// then
-		assertEquals(2, carService.findAllCarsInDatabase().size());
-		carTO.setId(1L);
-		carService.removeCarFromDatabase(carTO);
-		carTO.setId(2L);
-		carService.removeCarFromDatabase(carTO);
+		assertEquals(2, carService.findAllCarsInDatabase().size() - carDaoStartSize);
+
+		carService.removeCarFromDatabase(carTO1);
+		carService.removeCarFromDatabase(carTO2);
+		assertEquals(0, carService.findAllCarsInDatabase().size() - carDaoStartSize);
+	}
+
+	@Test
+	public void shouldRemoveCarFromDatabaseTest() {
+
+		// given
+		int carDaoStartSize = carService.findAllCarsInDatabase().size();
+		CarTO carTO1 = carService.addCarToDatabase(buildCarTO());
+		CarTO carTO2 = carService.addCarToDatabase(buildCarTO());
+		assertEquals(2, carService.findAllCarsInDatabase().size() - carDaoStartSize);
+
+		// when
+		carService.removeCarFromDatabase(carTO1);
+		carService.removeCarFromDatabase(carTO2);
+
+		// then
+		assertEquals(0, carService.findAllCarsInDatabase().size() - carDaoStartSize);
+
 	}
 
 	@Test
 	public void shouldChangeCarDetailsTest() {
 		// given
-		CarTO carTO = buildCarTO();
-		carService.addCarToDatabase(carTO);
-		assertEquals("BMW", carDao.findOne(1L).getBrand());
+		CarTO carTO = carService.addCarToDatabase(buildCarTO());
+		assertEquals("BMW", carDao.findOne(carTO.getId()).getBrand());
 
 		// when
-		CarTO newCarTO = buildSecoundCarTO();
-		newCarTO.setId(1L);
-		carService.changeCarDetails(newCarTO);
+		carTO.setBrand("Mercedes");
+		carTO.setCarType("kombi");
+		carTO.setColor("blue");
+		carService.changeCarDetails(carTO);
 
 		// then
-		assertEquals("Mercedes", carDao.findOne(1L).getBrand());
-		assertEquals("kombi", carDao.findOne(1L).getCarType());
-		assertEquals("blue", carDao.findOne(1L).getColor());
+		assertEquals("Mercedes", carDao.findOne(carTO.getId()).getBrand());
+		assertEquals("kombi", carDao.findOne(carTO.getId()).getCarType());
+		assertEquals("blue", carDao.findOne(carTO.getId()).getColor());
 	}
 
 	@Test
-	@Transactional
 	public void addEmployeeToCar() {
 		// given
-		CarTO carTO = buildCarTO();
-		carService.addCarToDatabase(carTO);
-		assertThat(carDao.findOne(1L).getEmployeesSet(), is(empty()));
+		int carDaoStartSize = carDao.findAll().size();
+		CarTO carTO = carService.addCarToDatabase(buildCarTO());
+		assertThat(carService.findNumberOfEmployeesAssignedToThisCar(carTO) - carDaoStartSize, is(0));
 
 		// when
-		EmployeeTO employeeTO = buildEmployeeTO();
-		employeeDao.save(buildEmployeeEntity());
-
-		carTO.setId(1L);
-		employeeTO.setId(1L);
+		EmployeeTO employeeTO = employeeService.addEmployeeTODatabase(buildEmployeeTO());
 		carService.addEmployeeToCar(carTO, employeeTO);
+
 		// then
-		assertThat(carDao.findOne(1L).getEmployeesSet(), is(not(empty())));
+		assertThat(carService.findNumberOfEmployeesAssignedToThisCar(carTO) - carDaoStartSize, is(1));
 	}
 
 	@Test
 	public void shouldFindCarByBrandAndTypeTest() {
 		// given
-		CarTO carTO = new CarTO();
-		carTO.setBrand("BMW");
-		carTO.setCarType("sedan");
-		carService.addCarToDatabase(buildCarTO());
-		carService.addCarToDatabase(buildSecoundCarTO());
+		CarTO carTO = buildCarTO();
+		int carTOListStartSize = carService.findCarByBrandAndType(carTO).size();
+		CarTO carTO2 = carService.addCarToDatabase(buildCarTO());
+		CarTO carTO3 = carService.addCarToDatabase(buildSecoundCarTO());
 
 		// when
 		List<CarTO> carTOList = carService.findCarByBrandAndType(carTO);
 
 		// then
-		assertThat(carTOList.size(), is(1));
+		assertThat(carTOList.size() - carTOListStartSize, is(1));
 
 	}
 
 	@Test
 	public void shouldFindAllCarsInDatabaseTest() {
 		// given
+		int carDaoStartSize = carService.findAllCarsInDatabase().size();
 		carService.addCarToDatabase(buildCarTO());
 		carService.addCarToDatabase(buildSecoundCarTO());
 
@@ -143,24 +156,20 @@ public class CarServiceTest {
 		List<CarTO> carTOList = carService.findAllCarsInDatabase();
 
 		// then
-		assertThat(carTOList.size(), is(2));
+		assertThat(carTOList.size() - carDaoStartSize, is(2));
 
 	}
 
 	@Test
-	@Transactional
 	public void shouldFindCarByAttachedEmployeeTest() {
 		// given
-		carService.addCarToDatabase(buildCarTO());
+		CarTO carTO = carService.addCarToDatabase(buildCarTO());
 		carService.addCarToDatabase(buildSecoundCarTO());
 		carService.addCarToDatabase(buildSecoundCarTO());
 		carService.addCarToDatabase(buildSecoundCarTO());
 
-		employeeDao.save(buildEmployeeEntity());
-		carDao.addAttachedEmployee(1L, employeeDao.findOne(1L));
-		// carDao.addAttachedEmployee(2L, employeeDao.findOne(1L));
-		EmployeeTO employeeTO = new EmployeeTO();
-		employeeTO.setId(1L);
+		EmployeeTO employeeTO = employeeService.addEmployeeTODatabase(buildEmployeeTO());
+		carService.addEmployeeToCar(carTO, employeeTO);
 
 		// when
 		Set<CarTO> carTOSet = carService.findCarByAttachedEmployee(employeeTO);
@@ -173,30 +182,25 @@ public class CarServiceTest {
 	@Test
 	public void shouldFindEmployeesByOfficeAndCarTest() {
 		// given
-		OfficeTO officeTO = buildOfficeTO();
-		CarTO carTO = buildCarTO();
-		carService.addCarToDatabase(carTO);
+		int carDaoStartSize = carService.findAllCarsInDatabase().size();
+
+		CarTO carTO = carService.addCarToDatabase(buildCarTO());
 		carService.addCarToDatabase(buildSecoundCarTO());
 		carService.addCarToDatabase(buildSecoundCarTO());
 		carService.addCarToDatabase(buildSecoundCarTO());
 
+		EmployeeTO employeeTO = employeeService.addEmployeeTODatabase(buildEmployeeTO());
 		employeeService.addEmployeeTODatabase(buildEmployeeTO());
-		employeeService.addEmployeeTODatabase(buildEmployeeTO());
-		officeService.addOfficeToDatabase(officeTO);
+		OfficeTO officeTO = officeService.addOfficeToDatabase(buildOfficeTO());
 
-		// employeeDao.save(buildEmployeeEntity());
-		carDao.addAttachedEmployee(1L, employeeDao.findOne(1L));
-		employeeDao.addEmployeeToOffice(1L, 1L);
-		// carDao.addAttachedEmployee(2L, employeeDao.findOne(1L));
+		carService.addEmployeeToCar(carTO, employeeTO);
+		officeService.addEmployeeToOffice(officeTO, employeeTO);
 
-		EmployeeTO employeeTO = new EmployeeTO();
-		employeeTO.setId(1L);
-		officeTO.setId(1L);
-		carTO.setId(1L);
 		// when
 		List<EmployeeTO> carTOList = carService.findEmployeeByOfficeAndCar(officeTO, carTO);
 
 		// then
+		assertThat(carService.findAllCarsInDatabase().size() - carDaoStartSize,is(4));
 		assertThat(carTOList.size(), is(1));
 
 	}

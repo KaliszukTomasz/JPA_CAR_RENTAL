@@ -45,8 +45,7 @@ import com.capgemini.types.builders.EmployeeTOBuilder;
 import com.capgemini.types.builders.OfficeTOBuilder;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(properties = "spring.profiles.active=hsql")  
-@DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
+@SpringBootTest(properties = "spring.profiles.active=hsql")
 public class OfficeServiceTest {
 
 	@Autowired
@@ -80,88 +79,70 @@ public class OfficeServiceTest {
 	@Test
 	public void shouldRemoveOfficeFromDatabaseTest() {
 		// given
-		officeService.addOfficeToDatabase(buildOfficeTO());
-		OfficeTO officeTO = buildOfficeTO();
-		officeTO.setId(1L);
+		int size = officeDao.findAll().size();
+		OfficeTO officeTO = officeService.addOfficeToDatabase(buildOfficeTO());
+		assertThat(officeDao.findAll().size() - size, is(1));
+
 		// when
 		officeService.removeOfficeFromDatabase(officeTO);
 
 		// then
-		assertThat(officeDao.findAll(), is(empty()));
+		assertThat(officeDao.findAll().size() - size, is(0));
 
 	}
 
 	@Test
 	public void shouldChangeOfficeDetailsTest() {
 		// given
-		officeService.addOfficeToDatabase(buildOfficeTO());
-		OfficeTO officeTO = buildOfficeTO();
+
+		OfficeTO officeTO = officeService.addOfficeToDatabase(buildOfficeTO());
 		officeTO.setEmail("newEmail");
-		officeTO.setId(1L);
 
 		// when
 		officeService.changeOfficeDetails(officeTO);
 
 		// then
-		assertThat(officeDao.findOne(1L).getEmail(), is("newEmail"));
+		assertThat(officeDao.findOne(officeTO.getId()).getEmail(), is("newEmail"));
 	}
 
 	@Test
-	@Transactional
 	public void shouldAddEmployeeToOfficeTest() {
 		// given
-		OfficeTO officeTO = buildOfficeTO();
-		EmployeeTO employeeTO = buildEmployeeTO();
-		officeTO.setId(1L);
-		employeeTO.setId(1L);
-
-		officeService.addOfficeToDatabase(buildOfficeTO());
-		employeeDao.save(buildEmployeeEntity());
-		assertThat(officeDao.findOne(1L).getEmployees(), is(empty()));
+		OfficeTO officeTO = officeService.addOfficeToDatabase(buildOfficeTO());
+		EmployeeTO employeeTO = employeeService.addEmployeeTODatabase(buildEmployeeTO());
+		assertThat(officeService.findSizeOfCollectionOfEmployeesInOffice(officeTO), is(0));
 
 		// when
 		officeService.addEmployeeToOffice(officeTO, employeeTO);
 
 		// then
-		assertThat(officeDao.findOne(1L).getEmployees().size(), is(1));
+		assertThat(officeService.findSizeOfCollectionOfEmployeesInOffice(officeTO), is(1));
 
 	}
 
 	@Test
-	@Transactional
 	public void shouldRemoveEmployeeFromOfficeTest() {
 		// given
-		OfficeTO officeTO = buildOfficeTO();
-		EmployeeTO employeeTO = buildEmployeeTO();
-		officeTO.setId(1L);
-		employeeTO.setId(1L);
-
-		officeService.addOfficeToDatabase(buildOfficeTO());
-		employeeDao.save(buildEmployeeEntity());
+		OfficeTO officeTO = officeService.addOfficeToDatabase(buildOfficeTO());
+		EmployeeTO employeeTO = employeeService.addEmployeeTODatabase(buildEmployeeTO());
 		officeService.addEmployeeToOffice(officeTO, employeeTO);
-		assertThat(officeDao.findOne(1L).getEmployees().size(), is(1));
+		assertThat(officeService.findSizeOfCollectionOfEmployeesInOffice(officeTO), is(1));
 
 		// when
 		officeService.removeEmployeeFromOffice(officeTO, employeeTO);
 
 		// then
-		assertThat(officeDao.findOne(1L).getEmployees().size(), is(0));
+		assertThat(officeService.findSizeOfCollectionOfEmployeesInOffice(officeTO), is(0));
 
 	}
 
 	@Test
-	@Transactional
 	public void shouldFindAllEmployeesFromOfficeTest() {
 		// given
-		OfficeTO officeTO = buildOfficeTO();
-		EmployeeTO employeeTO = buildEmployeeTO();
-		officeTO.setId(1L);
-		employeeTO.setId(1L);
-
-		officeService.addOfficeToDatabase(buildOfficeTO());
-		employeeDao.save(buildEmployeeEntity());
+		OfficeTO officeTO = officeService.addOfficeToDatabase(buildOfficeTO());
+		EmployeeTO employeeTO = employeeService.addEmployeeTODatabase(buildEmployeeTO());
 		officeService.addEmployeeToOffice(officeTO, employeeTO);
-		assertThat(officeDao.findOne(1L).getEmployees().size(), is(1));
+		assertThat(officeService.findSizeOfCollectionOfEmployeesInOffice(officeTO), is(1));
 
 		// when
 		Set<EmployeeTO> employeeTOSet = officeService.findAllEmployeesFromOffice(officeTO);
@@ -173,18 +154,15 @@ public class OfficeServiceTest {
 	@Test
 	public void shouldFindAllEmployeesFromOfficeAssigendToCarTest() {
 		// given
-		OfficeTO officeTO = buildOfficeTO();
-		EmployeeTO employeeTO = buildEmployeeTO();
-		CarTO carTO = buildCarTO();
-		officeTO.setId(1L);
-		employeeTO.setId(1L);
-		carTO.setId(1L);
-		carService.addCarToDatabase(carTO);
-		officeService.addOfficeToDatabase(buildOfficeTO());
-		employeeDao.save(buildEmployeeEntity());
+		EmployeeTO employeeTO = employeeService.addEmployeeTODatabase(buildEmployeeTO());
+		CarTO carTO = carService.addCarToDatabase(buildCarTO());
+		OfficeTO officeTO = officeService.addOfficeToDatabase(buildOfficeTO());
+
+		assertThat(officeService.findSizeOfCollectionOfEmployeesInOffice(officeTO), is(0));
 		officeService.addEmployeeToOffice(officeTO, employeeTO);
 		carService.addEmployeeToCar(carTO, employeeTO);
-		assertThat(officeDao.findOne(1L).getEmployees().size(), is(1));
+
+		assertThat(officeService.findSizeOfCollectionOfEmployeesInOffice(officeTO), is(1));
 
 		// when
 		List<EmployeeTO> employeeTOList = officeService.findAllEmployeesFromOfficeAssignedToCar(officeTO, carTO);
@@ -192,76 +170,130 @@ public class OfficeServiceTest {
 		assertThat(employeeTOList.size(), is(1));
 	}
 
+	// @Test
+	// public void shouldDeleteAllInformationAboutCarTest() {
+	// // given
+	// OfficeTO officeTO = buildOfficeTO();
+	// EmployeeTO employeeTO = buildEmployeeTO();
+	// CarTO carTO = buildCarTO();
+	// carService.addCarToDatabase(carTO);
+	// // CarLoanTO carLoanTO = buildCarLoanTO();
+	//
+	// assertThat(clientDao.findAll().size(), is(0));
+	// clientDao.save(buildClientEntity());
+	// assertThat(clientDao.findAll().size(), is(1));
+	// // officeService.addOfficeToDatabase(buildOfficeTO());
+	// // employeeService.addEmployeeTODatabase(employeeTO);
+	// // employeeDao.save(buildEmployeeEntity());
+	// assertThat(officeDao.findAll().size(), is(1));
+	// CarLoanEntity carLoanEntity = carLoanDao.save(buildCarLoanEntity());
+	//
+	// assertThat(carLoanEntity.getId(), is(1L));
+	// assertThat(officeDao.findAll().size(), is(1));
+	//
+	// assertThat(clientDao.findAll().size(), is(1));
+	// assertThat(carLoanDao.findAll().size(), is(1));
+	// // assertThat(carDao.findOne(1L).getCarLoans().size(), is(1));
+	// assertThat(clientDao.findOne(1L).getCarLoansSet().size(), is(1));
+	// //
+	//
+	// // officeTO.setId(1L);
+	// // employeeTO.setId(1L);
+	// // carTO.setId(1L);
+	// // carTO.setEmployeesIdSet(null);
+	// // carTO.setCurrentLocation(null);
+	// CarEntity newCarEntity = carDao.findOne(1L);
+	//
+	// // newCarEntity.removeCarLoanEntity(carLoanDao.findOne(1L));
+	//
+	// // assertThat(officeDao.findOne(1L).getEmployees().size(), is(1));
+	// // assertThat(carDao.findOne(1L).getCarLoans().size(), is(1));
+	//
+	// // when
+	// carTO.setId(1L);
+	// carService.removeCarFromDatabase(carTO);
+	//
+	// // then
+	//
+	// assertThat(employeeDao.findAll().size(), is(1));
+	//
+	// }
+
 	@Test
-	public void shouldDeleteAllInformationAboutCarTest() {
-		// given
-		OfficeTO officeTO = buildOfficeTO();
+	public void shouldNewTESTDeleteAllInformationAboutCarTest() {
+
+		int clientDaoStartSize = clientDao.findAll().size();
+		int officeDaoStartSize = officeDao.findAll().size();
+		int carLoanDaoStartSize = carLoanDao.findAll().size();
+		int employeeDaoStartSize = employeeDao.findAll().size();
+		int carDaoStartSize = carDao.findAll().size();
+
 		EmployeeTO employeeTO = buildEmployeeTO();
-		CarTO carTO = buildCarTO();
-		carService.addCarToDatabase(carTO);
-//		CarLoanTO carLoanTO = buildCarLoanTO();
-		assertThat(clientDao.findAll().size(), is(0));
+		CarLoanEntity carLoanEntity = buildCarLoanEntity();
+		CarEntity carEntity = buildCarEntity();
+		carEntity.addCarLoan(carLoanEntity);
+		carDao.save(carEntity);
+		assertThat(clientDao.findAll().size() - clientDaoStartSize, is(0));
 		clientDao.save(buildClientEntity());
-		
-//		officeService.addOfficeToDatabase(buildOfficeTO());
-//		employeeService.addEmployeeTODatabase(employeeTO);
-//		employeeDao.save(buildEmployeeEntity());
-		assertThat(officeDao.findAll().size(), is(1));
-		CarLoanEntity carLoanEntity = carLoanDao.save(buildCarLoanEntity());
-		assertThat(carLoanEntity.getId(), is(1L));
-		
-		assertThat(officeDao.findAll().size(), is(1));
-		
-		
-		assertThat(officeDao.findAll().size(), is(1));
-		assertThat(clientDao.findAll().size(), is(1));
-		assertThat(carLoanDao.findAll().size(), is(1));
-		assertThat(carDao.findOne(1L).getCarLoans().size(), is(1));
-		assertThat(clientDao.findOne(1L).getCarLoansSet().size(), is(1));
-//
-//		officeTO.setId(1L);
-//		employeeTO.setId(1L);
-//		carTO.setId(1L);
-//		carTO.setEmployeesIdSet(null);
-//		carTO.setCurrentLocation(null);
-		CarEntity newCarEntity = carDao.findOne(1L);
-		
-//		newCarEntity.removeCarLoanEntity(carLoanDao.findOne(1L));
-		
-		
-		// assertThat(officeDao.findOne(1L).getEmployees().size(), is(1));
-		// assertThat(carDao.findOne(1L).getCarLoans().size(), is(1));
-	
+		employeeService.addEmployeeTODatabase(employeeTO);
+		assertThat(officeDao.findAll().size() - officeDaoStartSize, is(1));
+		assertThat(clientDao.findAll().size() - clientDaoStartSize, is(1));
+		assertThat(carLoanDao.findAll().size() - carLoanDaoStartSize, is(1));
+		assertThat(employeeDao.findAll().size() - employeeDaoStartSize, is(1));
+
 		// when
-		carTO.setId(1L);
-		carService.removeCarFromDatabase(carTO);
+		carEntity.removeCarLoan(carLoanEntity);
+		carDao.delete(carEntity);
 
 		// then
-		
-		assertThat(employeeDao.findAll().size(), is(1));
-
+		assertThat(carDao.findAll().size() - carDaoStartSize, is(0));
+		assertThat(carLoanDao.findAll().size() - carLoanDaoStartSize, is(0));
+		assertThat(employeeDao.findAll().size() - employeeDaoStartSize, is(1));
+		assertThat(officeDao.findAll().size() - officeDaoStartSize, is(1));
+		assertThat(clientDao.findAll().size() - clientDaoStartSize, is(1));
 	}
 
-	@Transactional
 	private CarLoanEntity buildCarLoanEntity() {
-		CarTO carTO = buildCarTO();
-		carTO.setId(1L);
-		ClientTO clientTO = buildClientTO();
-		clientTO.setId(1L);
-		OfficeTO officeTO = buildOfficeTO();
-		officeTO.setId(1L);
-
-		CarEntity carEntity = new CarEntity("sedan", "CS", Year.of(2000), "black", 123, 123, 123, null, null, null);
-		ClientEntity clientEntity = new ClientEntity("jan", "kowal", buildAddressEntity(), new Date(1992, 12, 12),
-				9521566, "newEmail", 56123156598L, null);
-
-		OfficeEntity officeEntity = buildOfficeEntity();
-		CarEntity carEnt = carDao.findOne(1L);
-		
-		return new CarLoanEntity(carDao.findOne(1L), clientDao.findOne(1L), new Date(2018, 12, 05, 18, 16),
+		return new CarLoanEntity(null, clientDao.findOne(1L), new Date(2018, 12, 05, 18, 16),
 				new Date(2018, 12, 05, 23, 05), officeDao.findOne(1L), officeDao.findOne(1L), 200);
-
 	}
+
+	private CarEntity buildCarEntity() {
+		CarEntity carEntity = new CarEntity();
+		carEntity.setCarType("sedan");
+		carEntity.setCurrentLocation(buildOfficeEntity());
+		carEntity.setBrand("BMW");
+		carEntity.setYearOfProduction(Year.of(1995));
+		carEntity.setColor("red");
+		carEntity.setEngineCapacity(1600);
+		carEntity.setEnginePower(100);
+		carEntity.setMileage(100000);
+		return carEntity;
+	}
+	// @Transactional
+	// private CarLoanEntity buildCarLoanEntity() {
+	// CarTO carTO = buildCarTO();
+	// carTO.setId(1L);
+	// ClientTO clientTO = buildClientTO();
+	// clientTO.setId(1L);
+	// OfficeTO officeTO = buildOfficeTO();
+	// officeTO.setId(1L);
+	//
+	// CarEntity carEntity = new CarEntity("sedan", "CS", Year.of(2000),
+	// "black", 123, 123, 123, null, null, null);
+	// ClientEntity clientEntity = new ClientEntity("jan", "kowal",
+	// buildAddressEntity(), new Date(1992, 12, 12),
+	// 9521566, "newEmail", 56123156598L, null);
+	//
+	// OfficeEntity officeEntity = buildOfficeEntity();
+	// CarEntity carEnt = carDao.findOne(1L);
+	//
+	// return new CarLoanEntity(carDao.findOne(1L), clientDao.findOne(1L), new
+	// Date(2018, 12, 05, 18, 16),
+	// new Date(2018, 12, 05, 23, 05), officeDao.findOne(1L),
+	// officeDao.findOne(1L), 200);
+	//
+	// }
 
 	private CarLoanTO buildCarLoanTO() {
 		CarTO carTO = buildCarTO();
@@ -278,9 +310,8 @@ public class OfficeServiceTest {
 
 	private OfficeTO buildOfficeTO() {
 
-		return new OfficeTOBuilder().setAddress(new AddressTO("Berlin", "21353", "Lisia"))
-				.setCarSet(null).setEmail("email").setPhoneNumber(1356235)
-				.setEmployees(null).buildOfficeTO();
+		return new OfficeTOBuilder().setAddress(new AddressTO("Berlin", "21353", "Lisia")).setCarSet(null)
+				.setEmail("email").setPhoneNumber(1356235).setEmployees(null).buildOfficeTO();
 
 	}
 
@@ -321,9 +352,10 @@ public class OfficeServiceTest {
 				.setFirstName("Artur").setLastName("Lewandowski").setPhoneNumber(841532154).buildClientTO();
 		return clientTO;
 	}
-	
-	private ClientEntity buildClientEntity(){
-		return new ClientEntity("Artur", "Kras", buildAddressEntity(), new Date("10/11/1959"), 56641235, "emiala@wp.pl", 5615612123168L, new HashSet<>());
+
+	private ClientEntity buildClientEntity() {
+		return new ClientEntity("Artur", "Kras", buildAddressEntity(), new Date("10/11/1959"), 56641235, "emiala@wp.pl",
+				5615612123168L, new HashSet<>());
 	}
 
 	private AddressEntity buildAddressEntity() {
