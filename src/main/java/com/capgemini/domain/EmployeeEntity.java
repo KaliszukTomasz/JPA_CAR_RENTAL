@@ -8,6 +8,8 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -40,8 +42,9 @@ public class EmployeeEntity {
 	private String lastName;
 	@Column(nullable = false)
 	private Date dateOfBirth;
+	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
-	private EmployeePosition EmployeePosition;
+	private EmployeePosition employeePosition;
 
 	@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	private OfficeEntity office;
@@ -97,11 +100,11 @@ public class EmployeeEntity {
 	}
 
 	public EmployeePosition getEmployeePosition() {
-		return EmployeePosition;
+		return employeePosition;
 	}
 
 	public void setEmployeePosition(EmployeePosition employeePosition) {
-		EmployeePosition = employeePosition;
+		this.employeePosition = employeePosition;
 	}
 
 	public Date getDateOfBirth() {
