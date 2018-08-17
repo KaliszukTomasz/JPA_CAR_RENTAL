@@ -17,6 +17,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Version;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -26,6 +27,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 public class ClientEntity {
 	private static final long serialVersionUID = 1L;
 
+	@Version
+	private Long version;
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
@@ -57,7 +60,7 @@ public class ClientEntity {
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "modify_date")
 	private Date modifyDate;
-	
+
 	public ClientEntity() {
 	}
 
@@ -153,5 +156,9 @@ public class ClientEntity {
 		} else {
 			throw new NoSuchElementException();
 		}
+	}
+
+	public Long getVersion() {
+		return version;
 	}
 }

@@ -12,6 +12,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Version;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -21,20 +22,22 @@ import org.hibernate.annotations.UpdateTimestamp;
 public class CarLoanEntity {
 	private static final long serialVersionUID = 1L;
 
+	@Version
+	private Long version;
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
-	@ManyToOne(cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+	@ManyToOne(cascade = { CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH })
 	private CarEntity car;
-	@ManyToOne(cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+	@ManyToOne(cascade = { CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH })
 	private ClientEntity client;
 	@Column(nullable = false)
 	private Date loanDate;
 	@Column(nullable = false)
 	private Date returnDate;
-	@ManyToOne(cascade = { CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+	@ManyToOne(cascade = { CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH })
 	private OfficeEntity loanOffice;
-	@ManyToOne(cascade = { CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH})
+	@ManyToOne(cascade = { CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH })
 	private OfficeEntity returnOffice;
 	@Column(nullable = false)
 	private Integer amountOfLoan;
@@ -48,12 +51,12 @@ public class CarLoanEntity {
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "modify_date")
 	private Date modifyDate;
-	
+
 	public CarLoanEntity() {
 	}
 
-	public CarLoanEntity(CarEntity car, ClientEntity client, Date loanDate, Date returnDate,
-			OfficeEntity loanOffice, OfficeEntity returnOffice, Integer amountOfLoan) {
+	public CarLoanEntity(CarEntity car, ClientEntity client, Date loanDate, Date returnDate, OfficeEntity loanOffice,
+			OfficeEntity returnOffice, Integer amountOfLoan) {
 		super();
 		this.car = car;
 		this.client = client;
@@ -122,6 +125,10 @@ public class CarLoanEntity {
 
 	public void setAmountOfLoan(Integer amountOfLoan) {
 		this.amountOfLoan = amountOfLoan;
+	}
+
+	public Long getVersion() {
+		return version;
 	}
 
 }

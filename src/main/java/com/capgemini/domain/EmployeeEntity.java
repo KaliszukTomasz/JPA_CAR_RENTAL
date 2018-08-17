@@ -17,6 +17,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Version;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -26,6 +27,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 public class EmployeeEntity {
 	private static final long serialVersionUID = 1L;
 
+	@Version
+	private Long version;
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
@@ -116,7 +119,7 @@ public class EmployeeEntity {
 
 	public void addCarEntity(CarEntity carEntity) {
 		carsSet.add(carEntity);
-//		carEntity.addEmployeeEntityToCarEntity(this);
+		carEntity.addEmployeeEntityToCarEntity(this);
 	}
 
 	public CarEntity removeCarEntity(CarEntity carEntity) {
@@ -126,5 +129,7 @@ public class EmployeeEntity {
 			throw new NoSuchElementException();
 		}
 	}
-
+	public Long getVersion(){
+		return version;
+	}
 }

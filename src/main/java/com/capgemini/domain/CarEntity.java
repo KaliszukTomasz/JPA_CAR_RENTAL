@@ -17,6 +17,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 public class CarEntity {
 	private static final long serialVersionUID = 1L;
 
+	@Version
+	private Long version;
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
@@ -35,14 +37,13 @@ public class CarEntity {
 	@Column(nullable = false)
 	private Integer mileage;
 
-	
-	@ManyToOne(cascade={CascadeType.PERSIST, CascadeType.MERGE})
+	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	private OfficeEntity currentLocation;
 
 	@OneToMany(mappedBy = "car", cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<CarLoanEntity> carLoans = new HashSet<>();
 
-	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinTable(name = "Car_attachment", joinColumns = {
 			@JoinColumn(name = "Car_ID", nullable = false, updatable = false) }, inverseJoinColumns = {
 					@JoinColumn(name = "Employee_ID", nullable = false, updatable = false) })
@@ -160,18 +161,17 @@ public class CarEntity {
 	public void setEmployeesSet(Set<EmployeeEntity> employeesSet) {
 		this.employeesSet = employeesSet;
 	}
-	
+
 	public void addCarLoan(CarLoanEntity carLoanEntity) {
 		carLoans.add(carLoanEntity);
 		carLoanEntity.setCar(this);
 	}
 
 	public CarLoanEntity removeCarLoanEntity(CarLoanEntity carLoanEntity) {
-		System.out.println("                   "+carLoanEntity.getId());
-		System.out.println("                   "+carLoans.contains(carLoanEntity));
-		
-		if (carLoans.remove(carLoanEntity))
-		{
+		System.out.println("                   " + carLoanEntity.getId());
+		System.out.println("                   " + carLoans.contains(carLoanEntity));
+
+		if (carLoans.remove(carLoanEntity)) {
 			return carLoanEntity;
 		} else
 			throw new NoSuchElementException();
@@ -179,7 +179,7 @@ public class CarEntity {
 
 	public void addEmployeeEntityToCarEntity(EmployeeEntity employeeEntity) {
 		employeesSet.add(employeeEntity);
-//		employeeEntity.addCarEntity(this);
+		// employeeEntity.addCarEntity(this);
 	}
 
 	public EmployeeEntity removeEmployeeEntityFromCarEntity(EmployeeEntity employeeEntity) {
@@ -189,14 +189,14 @@ public class CarEntity {
 			throw new NoSuchElementException();
 		}
 	}
-	
-	public void removeCarLoan(CarLoanEntity carLoanEntity){
+
+	public void removeCarLoan(CarLoanEntity carLoanEntity) {
 		carLoans.remove(carLoanEntity);
 		carLoanEntity.setCar(null);
-				
+
 	}
 
-
-
-
+	public Long getVersion() {
+		return version;
+	}
 }

@@ -17,6 +17,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Version;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -26,6 +27,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 public class OfficeEntity {
 	private static final long serialVersionUID = 1L;
 
+	@Version
+	private Long version;
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
@@ -38,7 +41,7 @@ public class OfficeEntity {
 
 	@OneToMany(mappedBy = "office", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
 	private Set<EmployeeEntity> employees = new HashSet<>();
-	//TODO pracownicy mogą być bez biura!!!
+	
 
 	@OneToMany(mappedBy = "loanOffice", cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<CarLoanEntity> carLoansFromOffice = new HashSet<>();
@@ -190,4 +193,7 @@ public class OfficeEntity {
 		}
 	}
 
+	public Long getVersion(){
+		return version;
+	}
 }

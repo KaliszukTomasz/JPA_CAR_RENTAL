@@ -200,13 +200,25 @@ public class CarServiceTest {
 		List<EmployeeTO> carTOList = carService.findEmployeeByOfficeAndCar(officeTO, carTO);
 
 		// then
-		assertThat(carService.findAllCarsInDatabase().size() - carDaoStartSize,is(4));
+		assertThat(carService.findAllCarsInDatabase().size() - carDaoStartSize, is(4));
 		assertThat(carTOList.size(), is(1));
 
 	}
 
-	private EmployeeEntity buildEmployeeEntity() {
-		return new EmployeeEntity("Arek", "Konieczny", Date.from(Instant.now()), null, new HashSet<>());
+	@Test
+	public void shouldIncrementVersionOfCarObject() {
+
+		// given
+		CarTO carTO = carService.addCarToDatabase(buildCarTO());
+		assertThat(carDao.findOne(carTO.getId()).getVersion(), is(0L));
+
+		// when
+		carTO.setBrand("Audi");
+		carTO = carService.changeCarDetails(carTO);
+
+		// then
+		assertThat(carDao.findOne(carTO.getId()).getVersion(), is(1L));
+
 	}
 
 	private CarTO buildCarTO() {
@@ -228,9 +240,8 @@ public class CarServiceTest {
 
 	private EmployeeTO buildEmployeeTO() {
 
-		EmployeeTO employeeTO = new EmployeeTOBuilder().setDateOfBirth(new Date("10/11/1959")).setFirstName("Adam")
+		return new EmployeeTOBuilder().setDateOfBirth(new Date("10/11/1959")).setFirstName("Adam")
 				.setLastName("Kowalski").setOffice(buildOfficeTO()).buildEmployeeTO();
-		return employeeTO;
 	}
 
 	private OfficeTO buildOfficeTO() {
@@ -239,9 +250,4 @@ public class CarServiceTest {
 		return officeTO;
 	}
 
-	private OfficeEntity buildOfficeEntity() {
-		OfficeEntity officeEntity = new OfficeEntity(65656565, "qwe", new AddressEntity(), new HashSet<>(),
-				new HashSet<>(), new HashSet<>(), new HashSet<>());
-		return officeEntity;
-	}
 }
