@@ -30,7 +30,8 @@ public class OfficeServiceImpl implements OfficeService {
 	@Override
 	public OfficeTO addOfficeToDatabase(OfficeTO officeTO) {
 		if (officeTO.checkIfEveryParamNotNullThenTrue()) {
-			officeDao.save(OfficeMapper.map2OfficeEntity(officeTO));
+			OfficeEntity officeEntity = officeDao.save(OfficeMapper.map2OfficeEntity(officeTO));
+			officeTO.setId(officeEntity.getId());
 			return officeTO;
 		} else
 			throw new IllegalArgumentException();
@@ -55,7 +56,7 @@ public class OfficeServiceImpl implements OfficeService {
 			officeEntity.setPhoneNumber(officeTO.getPhoneNumber());
 			saveInBase = true;
 		}
-		if(saveInBase){
+		if (saveInBase) {
 			officeDao.update(officeEntity);
 		}
 		return officeTO;
@@ -96,7 +97,11 @@ public class OfficeServiceImpl implements OfficeService {
 			return EmployeeMapper.mapEmployeeEntityList2EmployeeTOList(listEmplEntities);
 		}
 	}
-
-
+	@Override
+	public Integer findSizeOfCollectionOfEmployeesInOffice(OfficeTO officeTO){
+		return officeDao.findOne(officeTO.getId()).getEmployees().size();
+			}
 
 }
+
+

@@ -16,6 +16,7 @@ public interface OfficeService {
 	EmployeeTO removeEmployeeFromOffice(OfficeTO officeTO, EmployeeTO employeeTO);
 	Set<EmployeeTO> findAllEmployeesFromOffice(OfficeTO officeTO);
 	List<EmployeeTO> findAllEmployeesFromOfficeAssignedToCar(OfficeTO officeTO, CarTO carTO);
+	Integer findSizeOfCollectionOfEmployeesInOffice(OfficeTO officeTO);
 	
 }
 

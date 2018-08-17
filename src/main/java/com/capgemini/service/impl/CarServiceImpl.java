@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.capgemini.dao.CarDao;
+import com.capgemini.dao.CarLoanDao;
+import com.capgemini.dao.Dao;
 import com.capgemini.dao.EmployeeDao;
 import com.capgemini.dao.OfficeDao;
 import com.capgemini.domain.CarEntity;
@@ -30,17 +32,23 @@ public class CarServiceImpl implements CarService {
 	EmployeeDao employeeDao;
 	@Autowired
 	OfficeDao officeDao;
+	@Autowired
+	private CarLoanDao carLoanDao;
 
 	@Override
 	public CarTO addCarToDatabase(CarTO carTO) {
-		CarEntity carEntity = CarMapper.map2CarEntity(carTO);
-		carDao.save(carEntity);
+		CarEntity carEntity = carDao.save(CarMapper.map2CarEntity(carTO));
+		carTO.setId(carEntity.getId());
 		return carTO;
 	}
 
-	@Override 
+	@Override
 	public CarTO removeCarFromDatabase(CarTO carTO) {
 		CarEntity carEntity = carDao.findOne(carTO.getId());
+		// carLoanDao.delete(carLoanDao.findOne(carTO.getId()));
+		// carEntity.getCarLoans().stream().forEach(loan ->
+		// carLoanDao.delete(loan));
+		// ;
 		carDao.delete(carEntity);
 		return carTO;
 
@@ -84,7 +92,7 @@ public class CarServiceImpl implements CarService {
 		} else
 			throw new IllegalArgumentException();
 	}
-	
+
 	@Override
 	public Set<CarTO> findCarByAttachedEmployee(EmployeeTO employeeTO) {
 		if (employeeTO != null) {
@@ -96,17 +104,17 @@ public class CarServiceImpl implements CarService {
 			throw new IllegalArgumentException();
 		}
 	}
-	
+
 	@Override
-	public List<EmployeeTO> findEmployeeByOfficeAndCar(OfficeTO officeTO, CarTO carTO){
+	public List<EmployeeTO> findEmployeeByOfficeAndCar(OfficeTO officeTO, CarTO carTO) {
 		if (officeTO.getId() == null || carTO.getId() == null) {
 			throw new IllegalArgumentException();
 		} else {
-			List<EmployeeEntity> listEmployeeEntities = carDao.findListOfEmployeesInOfficeAssignedToCar(officeTO.getId(), carTO.getId());
+			List<EmployeeEntity> listEmployeeEntities = carDao
+					.findListOfEmployeesInOfficeAssignedToCar(officeTO.getId(), carTO.getId());
 			return EmployeeMapper.mapEmployeeEntityList2EmployeeTOList(listEmployeeEntities);
 		}
-		
-		
+
 	}
 
 	@Override
@@ -114,4 +122,9 @@ public class CarServiceImpl implements CarService {
 		return CarMapper.mapListCarEntities2CarTOs(carDao.findAll());
 	}
 
+	@Override
+	public int findNumberOfEmployeesAssignedToThisCar(CarTO carTO) {
+		return carDao.findOne(carTO.getId()).getEmployeesSet().size();
+
+	}
 }

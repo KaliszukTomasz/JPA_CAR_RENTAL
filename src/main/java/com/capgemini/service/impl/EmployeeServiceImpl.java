@@ -22,13 +22,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 	OfficeDao officeDao;
 
 	@Override
-	public void addEmployeeTODatabase(EmployeeTO employeeTO) {
-		EmployeeEntity employeeEntity = EmployeeMapper.map2EmployeeEntity(employeeTO);
-		employeeDao.save(employeeEntity);
-//		if (employeeTO.getOffice() != null) {
-//			OfficeEntity officeEntity = officeDao.findOne(employeeTO.getOffice().getId());
-//			officeEntity.addEmployeeEntity(employeeEntity);
-//			officeDao.update(officeEntity);
-//		}
+	public EmployeeTO addEmployeeTODatabase(EmployeeTO employeeTO) {
+		EmployeeEntity newEmployeeEntity = employeeDao.save(EmployeeMapper.map2EmployeeEntity(employeeTO));
+		employeeTO.setId(newEmployeeEntity.getId());
+		return employeeTO;
 	}
 }
