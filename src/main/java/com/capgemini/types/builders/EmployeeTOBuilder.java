@@ -3,6 +3,7 @@ package com.capgemini.types.builders;
 import java.util.Date;
 import java.util.Set;
 
+import com.capgemini.enums.EmployeePosition;
 import com.capgemini.types.AddressTO;
 import com.capgemini.types.CarTO;
 import com.capgemini.types.EmployeeTO;
@@ -12,6 +13,7 @@ public class EmployeeTOBuilder {
     private Long id;
     private String firstName;
     private String lastName;
+    private EmployeePosition employeePosition;
     private Date dateOfBirth;
     private OfficeTO office;
     private Set<CarTO> carsSet;
@@ -40,6 +42,10 @@ public class EmployeeTOBuilder {
         this.office = office;
         return this;
     }
+    public EmployeeTOBuilder  setEmployeePosition(EmployeePosition employeePosition){
+    	this.employeePosition = employeePosition;
+    	return this;
+    }
 
     public EmployeeTOBuilder setCarsSet(Set<CarTO> carsSet) {
         this.carsSet = carsSet;
@@ -48,7 +54,7 @@ public class EmployeeTOBuilder {
 
     public EmployeeTO buildEmployeeTO() {
     	checkBeforeBuild(firstName, lastName, dateOfBirth, office);
-        return new EmployeeTO(id, firstName, lastName, dateOfBirth, office, carsSet);
+        return new EmployeeTO(id, firstName, lastName,  employeePosition, dateOfBirth, office, carsSet);
     }
     private void checkBeforeBuild(String firstName, String lastName, Date dateOfBirth,
 			OfficeTO office) {

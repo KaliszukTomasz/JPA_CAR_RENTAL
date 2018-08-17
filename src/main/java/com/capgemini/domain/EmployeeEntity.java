@@ -22,6 +22,8 @@ import javax.persistence.Version;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.capgemini.enums.EmployeePosition;
+
 @Entity
 @Table(name = "Employees")
 public class EmployeeEntity {
@@ -38,7 +40,8 @@ public class EmployeeEntity {
 	private String lastName;
 	@Column(nullable = false)
 	private Date dateOfBirth;
-	
+	@Column(nullable = false)
+	private EmployeePosition EmployeePosition;
 
 	@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	private OfficeEntity office;
@@ -91,6 +94,14 @@ public class EmployeeEntity {
 
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
+	}
+
+	public EmployeePosition getEmployeePosition() {
+		return EmployeePosition;
+	}
+
+	public void setEmployeePosition(EmployeePosition employeePosition) {
+		EmployeePosition = employeePosition;
 	}
 
 	public Date getDateOfBirth() {

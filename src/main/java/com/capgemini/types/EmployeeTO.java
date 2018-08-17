@@ -3,11 +3,14 @@ package com.capgemini.types;
 import java.util.Date;
 import java.util.Set;
 
+import com.capgemini.enums.EmployeePosition;
+
 public class EmployeeTO {
 
 	private Long id;
 	private String firstName;
 	private String lastName;
+	private EmployeePosition employeePosition;
 	private Date dateOfBirth;
 	private OfficeTO office;
 	private Set<CarTO> carsSet;
@@ -16,12 +19,13 @@ public class EmployeeTO {
 
 	}
 
-	public EmployeeTO(Long id, String firstName, String lastName, Date dateOfBirth, OfficeTO office,
+	public EmployeeTO(Long id, String firstName, String lastName, EmployeePosition employeePosition, Date dateOfBirth, OfficeTO office,
 			Set<CarTO> carsSet) {
 		super();
 		this.id = id;
 		this.firstName = firstName;
 		this.lastName = lastName;
+		this.employeePosition = employeePosition;
 		this.dateOfBirth = dateOfBirth;
 		this.office = office;
 		this.carsSet = carsSet;
@@ -73,6 +77,15 @@ public class EmployeeTO {
 
 	public void setCarsSet(Set<CarTO> carsSet) {
 		this.carsSet = carsSet;
+	}
+
+	
+	public EmployeePosition getEmployeePosition() {
+		return employeePosition;
+	}
+
+	public void setEmployeePosition(EmployeePosition employeePosition) {
+		this.employeePosition = employeePosition;
 	}
 
 	

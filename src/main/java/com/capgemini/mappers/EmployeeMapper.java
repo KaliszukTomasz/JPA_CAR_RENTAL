@@ -16,6 +16,7 @@ public class EmployeeMapper {
 		eE.setFirstName(eTO.getFirstName());
 		eE.setLastName(eTO.getLastName());
 		eE.setDateOfBirth(eTO.getDateOfBirth());
+		eE.setEmployeePosition(eTO.getEmployeePosition());
 
 		return eE;
 
@@ -28,6 +29,7 @@ public class EmployeeMapper {
 		eTO.setFirstName(employeeEntity.getFirstName());
 		eTO.setLastName(employeeEntity.getLastName());
 		eTO.setDateOfBirth(employeeEntity.getDateOfBirth());
+		eTO.setEmployeePosition(employeeEntity.getEmployeePosition());
 
 		return eTO;
 
@@ -40,6 +42,7 @@ public class EmployeeMapper {
 			empTO.setId(temp.getId());
 			empTO.setFirstName(temp.getFirstName());
 			empTO.setLastName(temp.getLastName());
+			empTO.setEmployeePosition(temp.getEmployeePosition());
 			return empTO;
 
 		}).collect(Collectors.toSet());
@@ -54,6 +57,7 @@ public class EmployeeMapper {
 			empTO.setId(temp.getId());
 			empTO.setFirstName(temp.getFirstName());
 			empTO.setLastName(temp.getLastName());
+			empTO.setEmployeePosition(temp.getEmployeePosition());
 			return empTO;
 
 		}).collect(Collectors.toList());

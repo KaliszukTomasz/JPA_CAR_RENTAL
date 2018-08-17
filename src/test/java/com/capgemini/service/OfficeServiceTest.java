@@ -32,6 +32,7 @@ import com.capgemini.domain.CarLoanEntity;
 import com.capgemini.domain.ClientEntity;
 import com.capgemini.domain.EmployeeEntity;
 import com.capgemini.domain.OfficeEntity;
+import com.capgemini.enums.EmployeePosition;
 import com.capgemini.types.AddressTO;
 import com.capgemini.types.CarLoanTO;
 import com.capgemini.types.CarTO;
@@ -318,7 +319,8 @@ public class OfficeServiceTest {
 	private EmployeeTO buildEmployeeTO() {
 
 		EmployeeTO employeeTO = new EmployeeTOBuilder().setDateOfBirth(new Date("10/11/1959")).setFirstName("Adam")
-				.setLastName("Kowalski").setOffice(buildOfficeTO()).buildEmployeeTO();
+				.setEmployeePosition(EmployeePosition.DEALER).setLastName("Kowalski").setOffice(buildOfficeTO())
+				.buildEmployeeTO();
 		return employeeTO;
 	}
 
