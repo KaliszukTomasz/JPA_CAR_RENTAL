@@ -1,13 +1,19 @@
 package com.capgemini.types.builders;
 
-import java.time.Year;
 import java.util.Date;
 import java.util.Set;
 
-import com.capgemini.domain.OfficeEntity;
 import com.capgemini.types.AddressTO;
 import com.capgemini.types.CarLoanTO;
 import com.capgemini.types.ClientTO;
+
+/**
+ * ClientTO builder
+ *
+ * @author TKALISZU
+ *
+ */
+
 
 public class ClientTOBuilder {
 	private Long id;

@@ -1,6 +1,5 @@
 package com.capgemini.types.builders;
 
-import java.util.Date;
 import java.util.Set;
 
 import com.capgemini.types.AddressTO;
@@ -9,6 +8,12 @@ import com.capgemini.types.CarTO;
 import com.capgemini.types.EmployeeTO;
 import com.capgemini.types.OfficeTO;
 
+/**
+ * OfficeTO builder
+ * 
+ * @author TKALISZU
+ *
+ */
 public class OfficeTOBuilder {
 	private Long id;
 	private Integer phoneNumber;

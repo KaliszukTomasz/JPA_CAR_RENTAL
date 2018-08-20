@@ -5,8 +5,12 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.capgemini.domain.EmployeeEntity;
-import com.capgemini.domain.OfficeEntity;
 
+/**
+ * @author TKALISZU Description: CarTO specify all information about Car - id,
+ *         carType, brand, yearOfProduction, color, engineCapacity, enginePower,
+ *         mileage, currentLocation, carLoans and employeesSet.
+ */
 public class CarTO {
 
 	private Long id;

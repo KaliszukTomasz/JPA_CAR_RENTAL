@@ -1,21 +1,39 @@
 package com.capgemini.domain;
 
-import java.io.Serializable;
 import java.time.Year;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Version;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+/**
+ * @author TKALISZU Description: CarEntity specify all information about Car -
+ *         Version, id, carType, brand, yearOfProduction, color, engineCapacity,
+ *         enginePower, mileage, currentLocation, carLoans and employeesSet. As
+ *         every entity has information about create_date and modify_date.
+ */
 @Entity
 @Table(name = "Cars")
 public class CarEntity {
-	private static final long serialVersionUID = 1L;
 
 	@Version
 	private Long version;
@@ -40,7 +58,7 @@ public class CarEntity {
 	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	private OfficeEntity currentLocation;
 
-	@OneToMany(mappedBy = "car", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "car", cascade ={ CascadeType.PERSIST,CascadeType.REMOVE }, orphanRemoval = true)
 	private Set<CarLoanEntity> carLoans = new HashSet<>();
 
 	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
@@ -168,10 +186,8 @@ public class CarEntity {
 	}
 
 	public CarLoanEntity removeCarLoanEntity(CarLoanEntity carLoanEntity) {
-		System.out.println("                   " + carLoanEntity.getId());
-		System.out.println("                   " + carLoans.contains(carLoanEntity));
-
 		if (carLoans.remove(carLoanEntity)) {
+			carLoanEntity.setCar(null);
 			return carLoanEntity;
 		} else
 			throw new NoSuchElementException();
@@ -179,11 +195,11 @@ public class CarEntity {
 
 	public void addEmployeeEntityToCarEntity(EmployeeEntity employeeEntity) {
 		employeesSet.add(employeeEntity);
-		// employeeEntity.addCarEntity(this);
 	}
 
 	public EmployeeEntity removeEmployeeEntityFromCarEntity(EmployeeEntity employeeEntity) {
 		if (employeesSet.remove(employeeEntity)) {
+			employeeEntity.removeCarEntity(this);
 			return employeeEntity;
 		} else {
 			throw new NoSuchElementException();

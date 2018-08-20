@@ -1,16 +1,14 @@
 package com.capgemini.domain;
 
-import java.util.Date; //TODO czy uzyc daty sql?
+import java.util.Date;
 import java.util.HashSet;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -26,10 +24,16 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import com.capgemini.enums.EmployeePosition;
 
+/**
+ * @author TKALISZU Description: EmployeeEntity specify all information about
+ *         employeeEntity - version, id, firstName, lastName, dateOfBirth,
+ *         employeePosition, office and carSet. As every entity has information
+ *         about create_date and modify_date.
+ */
+
 @Entity
 @Table(name = "Employees")
 public class EmployeeEntity {
-	private static final long serialVersionUID = 1L;
 
 	@Version
 	private Long version;
@@ -46,10 +50,10 @@ public class EmployeeEntity {
 	@Column(nullable = false)
 	private EmployeePosition employeePosition;
 
-	@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+	@ManyToOne
 	private OfficeEntity office;
 
-	@ManyToMany(mappedBy = "employeesSet", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+	@ManyToMany(mappedBy = "employeesSet")
 	private Set<CarEntity> carsSet = new HashSet<>();
 
 	@CreationTimestamp
@@ -61,7 +65,7 @@ public class EmployeeEntity {
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "modify_date")
 	private Date modifyDate;
-	
+
 	public EmployeeEntity() {
 	}
 
@@ -138,12 +142,14 @@ public class EmployeeEntity {
 
 	public CarEntity removeCarEntity(CarEntity carEntity) {
 		if (carsSet.remove(carEntity)) {
+			carEntity.removeEmployeeEntityFromCarEntity(this);
 			return carEntity;
 		} else {
 			throw new NoSuchElementException();
 		}
 	}
-	public Long getVersion(){
+
+	public Long getVersion() {
 		return version;
 	}
 }

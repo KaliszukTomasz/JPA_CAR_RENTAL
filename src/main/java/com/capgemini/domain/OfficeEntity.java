@@ -9,7 +9,6 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -22,10 +21,16 @@ import javax.persistence.Version;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+/**
+ * @author TKALISZU Description: OfficeEntity specify all information about
+ *         officeEntity - version, id, phoneNumber, email, address, employees,
+ *         carLoansFromOffice, carReturnsToOffice and carEntitySet. As every
+ *         entity has information about create_date and modify_date.
+ */
+
 @Entity
 @Table(name = "Offices")
 public class OfficeEntity {
-	private static final long serialVersionUID = 1L;
 
 	@Version
 	private Long version;
@@ -39,17 +44,16 @@ public class OfficeEntity {
 	@Embedded
 	private AddressEntity address;
 
-	@OneToMany(mappedBy = "office", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
+	@OneToMany(mappedBy = "office")
 	private Set<EmployeeEntity> employees = new HashSet<>();
-	
 
-	@OneToMany(mappedBy = "loanOffice", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "loanOffice", cascade = CascadeType.REMOVE, orphanRemoval = true)
 	private Set<CarLoanEntity> carLoansFromOffice = new HashSet<>();
 
-	@OneToMany(mappedBy = "returnOffice",  cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "returnOffice", cascade = CascadeType.REMOVE, orphanRemoval = true)
 	private Set<CarLoanEntity> carReturnsToOffice = new HashSet<>();
 
-	@OneToMany(mappedBy = "currentLocation", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "currentLocation")
 	private Set<CarEntity> carEntitySet = new HashSet<>();
 
 	@CreationTimestamp
@@ -61,7 +65,7 @@ public class OfficeEntity {
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "modify_date")
 	private Date modifyDate;
-	
+
 	public OfficeEntity() {
 	}
 
@@ -148,6 +152,7 @@ public class OfficeEntity {
 
 	public CarEntity removeCarEntityFromCurrentLocation(CarEntity carEntity) {
 		if (carEntitySet.remove(carEntity)) {
+			carEntity.setCurrentLocation(null);
 			return carEntity;
 		} else {
 			throw new NoSuchElementException();
@@ -161,6 +166,7 @@ public class OfficeEntity {
 
 	public CarLoanEntity removeCarLoanToOffice(CarLoanEntity carLoanEntity) {
 		if (carLoansFromOffice.remove(carLoanEntity)) {
+			carLoanEntity.setLoanOffice(null);
 			return carLoanEntity;
 		} else {
 			throw new NoSuchElementException();
@@ -174,6 +180,7 @@ public class OfficeEntity {
 
 	public CarLoanEntity removeReturnCarLoanToOffice(CarLoanEntity carLoanEntity) {
 		if (carReturnsToOffice.remove(carLoanEntity)) {
+			carLoanEntity.setReturnOffice(null);
 			return carLoanEntity;
 		} else {
 			throw new NoSuchElementException();
@@ -187,13 +194,14 @@ public class OfficeEntity {
 
 	public EmployeeEntity removeEmployeeEntity(EmployeeEntity employeeEntity) {
 		if (employees.remove(employeeEntity)) {
+			employeeEntity.setOffice(null);
 			return employeeEntity;
 		} else {
 			throw new NoSuchElementException();
 		}
 	}
 
-	public Long getVersion(){
+	public Long getVersion() {
 		return version;
 	}
 }

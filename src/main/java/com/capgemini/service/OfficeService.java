@@ -7,6 +7,12 @@ import com.capgemini.types.CarTO;
 import com.capgemini.types.EmployeeTO;
 import com.capgemini.types.OfficeTO;
 
+/**
+ * @author TKALISZU
+ * Description:
+ * Transactional service with methods to manage our database with offices.
+ */
+
 public interface OfficeService {
 
 	OfficeTO addOfficeToDatabase(OfficeTO officeTO);

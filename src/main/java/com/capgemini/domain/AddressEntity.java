@@ -1,16 +1,12 @@
 package com.capgemini.domain;
 
-import java.util.Date;
-
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.Version;
 
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
+/**
+ * @author TKALISZU Description: AddressEntity contains information about city,
+ *         zipCode and streetAddress of ClientEntity or OfficeEntity
+ */
 @Embeddable
 public class AddressEntity {
 

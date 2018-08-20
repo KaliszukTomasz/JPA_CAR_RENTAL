@@ -27,6 +27,15 @@ public class OfficeServiceImpl implements OfficeService {
 	@Autowired
 	EmployeeDao employeeDao;
 
+	/*
+	 * addOfficeToDatabase add new officeTO to database.
+	 * 
+	 * @param OfficeTO officeTO
+	 * 
+	 * @see
+	 * com.capgemini.service.OfficeService#addOfficeToDatabase(com.capgemini.
+	 * types.OfficeTO)
+	 */
 	@Override
 	public OfficeTO addOfficeToDatabase(OfficeTO officeTO) {
 		if (officeTO.checkIfEveryParamNotNullThenTrue()) {
@@ -37,6 +46,15 @@ public class OfficeServiceImpl implements OfficeService {
 			throw new IllegalArgumentException();
 	}
 
+	/*
+	 * removeOfficeFromDatabase remove officeEntity with officeTO.id from
+	 * database
+	 * 
+	 * @param OfficeTO officeTO
+	 * 
+	 * @see com.capgemini.service.OfficeService#removeOfficeFromDatabase(com.
+	 * capgemini.types.OfficeTO)
+	 */
 	@Override
 	public OfficeTO removeOfficeFromDatabase(OfficeTO officeTO) {
 		OfficeEntity officeEntity = officeDao.findOne(officeTO.getId());
@@ -44,6 +62,16 @@ public class OfficeServiceImpl implements OfficeService {
 		return OfficeMapper.map2OfficeTO(officeEntity);
 	}
 
+	/*
+	 * changeOfficeDatails change details of office in database. Dates come from
+	 * officeTO update to entity with officeTO.id
+	 * 
+	 * @param OfficeTO officeTO
+	 * 
+	 * @see
+	 * com.capgemini.service.OfficeService#changeOfficeDetails(com.capgemini.
+	 * types.OfficeTO)
+	 */
 	@Override
 	public OfficeTO changeOfficeDetails(OfficeTO officeTO) {
 		OfficeEntity officeEntity = officeDao.findOne(officeTO.getId());
@@ -62,6 +90,16 @@ public class OfficeServiceImpl implements OfficeService {
 		return officeTO;
 	}
 
+	/*
+	 * addEmployeetoOffce add attachement to officeEntity from database witch
+	 * officeTO.id and attached employeeEntity with employeeTO.id
+	 * 
+	 * @param OfficeTO officeTO
+	 * 
+	 * @see
+	 * com.capgemini.service.OfficeService#addEmployeeToOffice(com.capgemini.
+	 * types.OfficeTO, com.capgemini.types.EmployeeTO)
+	 */
 	@Override
 	public EmployeeTO addEmployeeToOffice(OfficeTO officeTO, EmployeeTO employeeTO) {
 		EmployeeEntity employeeEntity = employeeDao.findOne(employeeTO.getId());
@@ -71,15 +109,35 @@ public class OfficeServiceImpl implements OfficeService {
 		return EmployeeMapper.map2EmployeeTO(employeeEntity);
 	}
 
+	/*
+	 * removeEmployeeFromOffice remove attachement officeEntity - employeeEntity
+	 * 
+	 * @param OfficeTO officeTO
+	 * 
+	 * @param EmployeeTO EmployeeTO
+	 * 
+	 * @see com.capgemini.service.OfficeService#removeEmployeeFromOffice(com.
+	 * capgemini.types.OfficeTO, com.capgemini.types.EmployeeTO)
+	 */
 	@Override
 	public EmployeeTO removeEmployeeFromOffice(OfficeTO officeTO, EmployeeTO employeeTO) {
 		EmployeeEntity employeeEntity = employeeDao.findOne(employeeTO.getId());
 		OfficeEntity officeEntity = officeDao.findOne(officeTO.getId());
 		officeEntity.removeEmployeeEntity(employeeEntity);
-		officeDao.update(officeEntity);
+		// employeeEntity.setOffice(null);
+		// employeeDao.update(employeeEntity);
+		// officeDao.update(officeEntity);
 		return EmployeeMapper.map2EmployeeTO(employeeEntity);
 	}
 
+	/*
+	 * findAllEmployeesFromOffice take set of employeeTO which are connected to
+	 * the office
+	 * 
+	 * @param OfficeTO officeTO
+	 * 
+	 * @see Set<EmployeeTO>
+	 */
 	@Override
 	public Set<EmployeeTO> findAllEmployeesFromOffice(OfficeTO officeTO) {
 		OfficeEntity officeEntity = officeDao.findOne(officeTO.getId());
@@ -87,6 +145,16 @@ public class OfficeServiceImpl implements OfficeService {
 		return EmployeeMapper.mapEmployeeEntitySet2EmployeeTOSet(employeeEntitySet);
 	}
 
+	/*
+	 * findAllEmployeesFromOfficeAssignedToCar find all employees from office
+	 * which are assigned to car witch carTO.id.
+	 * 
+	 * @param OfficeTO officeTO
+	 * 
+	 * @param CarTO carTO
+	 * 
+	 * @see List<EmployeeTO>
+	 */
 	@Override
 	public List<EmployeeTO> findAllEmployeesFromOfficeAssignedToCar(OfficeTO officeTO, CarTO carTO) {
 		if (officeTO.getId() == null || carTO.getId() == null) {
@@ -97,11 +165,17 @@ public class OfficeServiceImpl implements OfficeService {
 			return EmployeeMapper.mapEmployeeEntityList2EmployeeTOList(listEmplEntities);
 		}
 	}
+
+	/*
+	 * findSizeOfCollectionOfEmployeesInOffice find number of employees assigned
+	 * to officeentity with officeTO.id
+	 * 
+	 * @see com.capgemini.service.OfficeService#
+	 * findSizeOfCollectionOfEmployeesInOffice(com.capgemini.types.OfficeTO)
+	 */
 	@Override
-	public Integer findSizeOfCollectionOfEmployeesInOffice(OfficeTO officeTO){
+	public Integer findSizeOfCollectionOfEmployeesInOffice(OfficeTO officeTO) {
 		return officeDao.findOne(officeTO.getId()).getEmployees().size();
-			}
+	}
 
 }
-
-

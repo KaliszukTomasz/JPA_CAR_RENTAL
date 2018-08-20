@@ -1,7 +1,11 @@
 package com.capgemini.types;
 
 import java.util.Date;
-
+/**
+ * @author TKALISZU Description: CarLoanTO specify all information about
+ *         carLoan -  id, car, client, loanDate, returnDate, loanOffice,
+ *         returnOffice amountOfLoan. 
+ */
 public class CarLoanTO {
 
 	private Long id;

@@ -1,7 +1,5 @@
 package com.capgemini.types.builders;
 
-
-
 import java.util.Date;
 
 import com.capgemini.types.CarLoanTO;
@@ -9,6 +7,12 @@ import com.capgemini.types.CarTO;
 import com.capgemini.types.ClientTO;
 import com.capgemini.types.OfficeTO;
 
+/**
+ * CarLoanTO builder
+ * 
+ * @author TKALISZU
+ *
+ */
 public class CarLoanTOBuilder {
 	private Long id;
 	private CarTO car;

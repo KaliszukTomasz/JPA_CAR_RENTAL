@@ -7,6 +7,15 @@ import java.util.stream.Collectors;
 import com.capgemini.domain.EmployeeEntity;
 import com.capgemini.types.EmployeeTO;
 
+
+
+/**
+ * @author TKALISZU
+ *
+ * Description:
+ * EmployeeMapper has 4 methods.
+ * Can map EmployeeTO to EmployeeEntity, EmployeeEntity to EmployeeTO and Set/List of EmployeeEntities to Set/List EmployeeTO.
+ */
 public class EmployeeMapper {
 
 	public static EmployeeEntity map2EmployeeEntity(EmployeeTO eTO) {

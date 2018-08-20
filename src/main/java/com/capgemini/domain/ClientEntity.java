@@ -9,7 +9,6 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -22,10 +21,15 @@ import javax.persistence.Version;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+/**
+ * @author TKALISZU Description: ClientEntity specify all information about
+ *         clientEntity - version, id, firstName, lastName, address, dateOfBirth
+ *         phoneNumber, email, creditCardNumber and carLoansSet. As every entity
+ *         has information about create_date and modify_date.
+ */
 @Entity
 @Table(name = "Clients")
 public class ClientEntity {
-	private static final long serialVersionUID = 1L;
 
 	@Version
 	private Long version;
@@ -48,7 +52,7 @@ public class ClientEntity {
 	@Column(nullable = false)
 	private Long creditCardNumber;
 
-	@OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "client", cascade = CascadeType.REMOVE, orphanRemoval = true)
 	private Set<CarLoanEntity> carLoansSet = new HashSet<>();
 
 	@CreationTimestamp
@@ -152,6 +156,7 @@ public class ClientEntity {
 
 	public CarLoanEntity removeCarLoanEntity(CarLoanEntity carLoanEntity) {
 		if (carLoansSet.remove(carLoanEntity)) {
+			carLoanEntity.setClient(null);
 			return carLoanEntity;
 		} else {
 			throw new NoSuchElementException();

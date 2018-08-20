@@ -9,6 +9,12 @@ import com.capgemini.domain.EmployeeEntity;
 import com.capgemini.types.CarTO;
 import com.capgemini.types.OfficeTO;
 
+/**
+ * CarTO builder
+ * 
+ * @author TKALISZU
+ *
+ */
 public class CarTOBuilder {
 	private Long id;
 	private String carType;

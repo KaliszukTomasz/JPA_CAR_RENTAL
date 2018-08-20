@@ -1,12 +1,13 @@
 package com.capgemini.types.builders;
 
-import java.util.Set;
-
-import org.springframework.util.CollectionUtils;
-
 import com.capgemini.types.AddressTO;
-import com.capgemini.types.AuthorTO;
 
+/**
+ * AddressTO builder
+ * 
+ * @author TKALISZU
+ *
+ */
 public class AddressTOBuilder {
     private String city;
     private String zipCode;

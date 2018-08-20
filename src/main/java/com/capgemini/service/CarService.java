@@ -7,6 +7,13 @@ import com.capgemini.types.CarTO;
 import com.capgemini.types.EmployeeTO;
 import com.capgemini.types.OfficeTO;
 
+/**
+ * @author TKALISZU
+ * Description:
+ * Transactional service with methods to manage our database with cars.
+ */
+
+
 public interface CarService {
 
 	public CarTO addCarToDatabase(CarTO carTO);

@@ -5,6 +5,12 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Stream;
 
+/**
+ * @author TKALISZU Description: OfficeTO specify all information about officeTO
+ *         - id, phoneNumber, email, address, employees, carLoansFromOffice,
+ *         carReturnsToOffice and carEntitySet.
+ */
+
 public class OfficeTO {
 
 	private Long id;
@@ -15,9 +21,9 @@ public class OfficeTO {
 	private Set<CarLoanTO> carLoansFromOffice = new HashSet<>();
 	private Set<CarLoanTO> carReturnsToOffice = new HashSet<>();
 	private Set<CarTO> carSet = new HashSet<>();
-	
-	public OfficeTO(){
-		
+
+	public OfficeTO() {
+
 	}
 
 	public OfficeTO(Long id, Integer phoneNumber, String email, AddressTO address, Set<EmployeeTO> employees,
@@ -96,11 +102,10 @@ public class OfficeTO {
 	public void setCarSet(Set<CarTO> carSet) {
 		this.carSet = carSet;
 	}
-	
-	public boolean checkIfEveryParamNotNullThenTrue(){
+
+	public boolean checkIfEveryParamNotNullThenTrue() {
 		return !Stream.of(phoneNumber, email, address).allMatch(Objects::isNull);
-	
+
 	}
-	
-	
+
 }

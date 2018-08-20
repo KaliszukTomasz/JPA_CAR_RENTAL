@@ -5,6 +5,11 @@ import java.util.Set;
 
 import com.capgemini.enums.EmployeePosition;
 
+/*
+* @author TKALISZU Description: EmployeeTO specify all information about
+*         employeeTO - id, firstName, lastName, dateOfBirth,
+*         employeePosition, office and carSet. 
+*/
 public class EmployeeTO {
 
 	private Long id;

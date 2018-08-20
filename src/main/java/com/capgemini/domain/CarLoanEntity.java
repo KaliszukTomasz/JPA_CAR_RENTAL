@@ -2,7 +2,6 @@ package com.capgemini.domain;
 
 import java.util.Date;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,29 +16,34 @@ import javax.persistence.Version;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+/**
+ * @author TKALISZU Description: CarLoanEntity specify all information about
+ *         carLoan - version, id, car, client, loanDate, returnDate, loanOffice,
+ *         returnOffice amountOfLoan. As every entity has information about
+ *         create_date and modify_date.
+ */
 @Entity
 @Table(name = "Car_Loans")
 public class CarLoanEntity {
-	private static final long serialVersionUID = 1L;
 
 	@Version
 	private Long version;
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
-	@ManyToOne(cascade = { CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH })
+	@ManyToOne
 	private CarEntity car;
-	@ManyToOne(cascade = { CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH })
+	@ManyToOne
 	private ClientEntity client;
 	@Column(nullable = false)
 	private Date loanDate;
 	@Column(nullable = false)
 	private Date returnDate;
-	@ManyToOne(cascade = { CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH })
+	@ManyToOne
 	private OfficeEntity loanOffice;
-	@ManyToOne(cascade = { CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH })
+	@ManyToOne
 	private OfficeEntity returnOffice;
-	@Column(nullable = false)
+	@Column
 	private Integer amountOfLoan;
 
 	@CreationTimestamp

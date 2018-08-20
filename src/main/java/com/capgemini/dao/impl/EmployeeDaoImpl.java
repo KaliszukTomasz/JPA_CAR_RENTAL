@@ -1,6 +1,5 @@
 package com.capgemini.dao.impl;
 
-import java.util.EnumSet;
 import java.util.List;
 
 import javax.persistence.TypedQuery;
@@ -8,7 +7,6 @@ import javax.persistence.TypedQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.capgemini.dao.CarDao;
 import com.capgemini.dao.EmployeeDao;
 import com.capgemini.dao.OfficeDao;
 import com.capgemini.domain.EmployeeEntity;

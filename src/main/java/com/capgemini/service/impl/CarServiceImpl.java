@@ -8,8 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.capgemini.dao.CarDao;
-import com.capgemini.dao.CarLoanDao;
-import com.capgemini.dao.Dao;
 import com.capgemini.dao.EmployeeDao;
 import com.capgemini.dao.OfficeDao;
 import com.capgemini.domain.CarEntity;
@@ -32,9 +30,16 @@ public class CarServiceImpl implements CarService {
 	EmployeeDao employeeDao;
 	@Autowired
 	OfficeDao officeDao;
-	@Autowired
-	private CarLoanDao carLoanDao;
 
+	/*
+	 * addCarTODatabase add new CarEntity to database with carTO parameters.
+	 * 
+	 * @param CarTO carTO
+	 * 
+	 * @see
+	 * com.capgemini.service.CarService#addCarToDatabase(com.capgemini.types.
+	 * CarTO)
+	 */
 	@Override
 	public CarTO addCarToDatabase(CarTO carTO) {
 		CarEntity carEntity = carDao.save(CarMapper.map2CarEntity(carTO));
@@ -42,6 +47,15 @@ public class CarServiceImpl implements CarService {
 		return carTO;
 	}
 
+	/*
+	 * removeCarFromDatabase remove carEntity from database with carTO.id
+	 * 
+	 * @param CarTO carTO
+	 * 
+	 * @see
+	 * com.capgemini.service.CarService#removeCarFromDatabase(com.capgemini.
+	 * types.CarTO)
+	 */
 	@Override
 	public CarTO removeCarFromDatabase(CarTO carTO) {
 		CarEntity carEntity = carDao.findOne(carTO.getId());
@@ -54,6 +68,17 @@ public class CarServiceImpl implements CarService {
 
 	}
 
+	/*
+	 * changeCarDetails change parameters of carEntity witch carTO.id can
+	 * change: carEntity.brand, carEntity.carType, carEntity.color,
+	 * carEntity.location, carEntity.engineCapacity, carEntity.enginePower.
+	 * 
+	 * @param CarTO carTO
+	 * 
+	 * @see
+	 * com.capgemini.service.CarService#changeCarDetails(com.capgemini.types.
+	 * CarTO)
+	 */
 	@Override
 	public CarTO changeCarDetails(CarTO carTO) {
 		CarEntity carEntity = carDao.findOne(carTO.getId());
@@ -79,11 +104,34 @@ public class CarServiceImpl implements CarService {
 		return carTO;
 	}
 
+	/*
+	 * 
+	 * addEmployeeTOCar attached carEntity with id = carTO.id to employeeEntity
+	 * with id = employeeTO.id
+	 * 
+	 * @param CarTO carTO
+	 * 
+	 * @param EmployeeTO employeeTO
+	 * 
+	 * @see
+	 * com.capgemini.service.CarService#addEmployeeToCar(com.capgemini.types.
+	 * CarTO, com.capgemini.types.EmployeeTO)
+	 */
 	@Override
 	public void addEmployeeToCar(CarTO carTO, EmployeeTO employeeTO) {
 		carDao.addAttachedEmployee(carTO.getId(), employeeDao.findOne(employeeTO.getId()));
 	}
 
+	/*
+	 * findCarByBrandAndType find cars from database which brand = carTO.brand,
+	 * and carType = carTO.carType;
+	 * 
+	 * @param CarTO carTO
+	 * 
+	 * @see
+	 * com.capgemini.service.CarService#findCarByBrandAndType(com.capgemini.
+	 * types.CarTO)
+	 */
 	@Override
 	public List<CarTO> findCarByBrandAndType(CarTO carTO) {
 		if (carTO.getBrand() != null && carTO.getCarType() != null) {
@@ -93,6 +141,16 @@ public class CarServiceImpl implements CarService {
 			throw new IllegalArgumentException();
 	}
 
+	/*
+	 * findCarByAttachedEmployee find cars which are to employeeEntity with
+	 * employeeTO.id.
+	 * 
+	 * @param EmployeeTO employeeTO
+	 * 
+	 * @see
+	 * com.capgemini.service.CarService#findCarByAttachedEmployee(com.capgemini.
+	 * types.EmployeeTO)
+	 */
 	@Override
 	public Set<CarTO> findCarByAttachedEmployee(EmployeeTO employeeTO) {
 		if (employeeTO != null) {
@@ -105,6 +163,18 @@ public class CarServiceImpl implements CarService {
 		}
 	}
 
+	/*
+	 * findEmplyeeByOfficeAndCar find all employees which are connected with
+	 * office with id = officeTO.id and car with id = catTO.id
+	 * 
+	 * @param CarTO carTO
+	 * 
+	 * @param OfficeTO officeTO
+	 * 
+	 * @see
+	 * com.capgemini.service.CarService#findEmployeeByOfficeAndCar(com.capgemini
+	 * .types.OfficeTO, com.capgemini.types.CarTO)
+	 */
 	@Override
 	public List<EmployeeTO> findEmployeeByOfficeAndCar(OfficeTO officeTO, CarTO carTO) {
 		if (officeTO.getId() == null || carTO.getId() == null) {

@@ -7,6 +7,13 @@ import java.util.stream.Collectors;
 import com.capgemini.domain.CarEntity;
 import com.capgemini.types.CarTO;
 
+
+/**
+ * @author TKALISZU
+ * 
+ * Description:
+ * CarMapper has 3 methods to map carTO to carEntity and to map list and set of carEntities to list/set of carTO.
+ */
 public class CarMapper {
 
 	public static CarEntity map2CarEntity(CarTO carTO) {
@@ -19,7 +26,7 @@ public class CarMapper {
 		carE.setEnginePower(carTO.getEnginePower());
 		carE.setMileage(carTO.getMileage());
 		carE.setCurrentLocation(OfficeMapper.map2OfficeEntity(carTO.getCurrentLocation()));
-		//carE.setEmployeesSet(carTO.getEmployeesSet());
+
 
 		return carE;
 	}

@@ -4,6 +4,11 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * @author TKALISZU Description: ClientTO specify all information about clientTO
+ *         - id, firstName, lastName, address, dateOfBirth phoneNumber, email,
+ *         creditCardNumber and carLoansSet.
+ */
 public class ClientTO {
 
 	private Long id;

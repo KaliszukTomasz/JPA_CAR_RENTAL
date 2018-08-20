@@ -1,5 +1,8 @@
 package com.capgemini.types;
-
+/**
+ * @author TKALISZU Description: AddressTO contains information about city,
+ *         zipCode and streetAddress of ClientTO or OfficeTO
+ */
 public class AddressTO {
 
 	private String city;

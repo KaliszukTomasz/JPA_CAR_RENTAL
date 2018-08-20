@@ -1,17 +1,13 @@
 package com.capgemini.dao.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 import javax.persistence.TypedQuery;
-import javax.transaction.Transactional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.capgemini.dao.OfficeDao;
-import com.capgemini.domain.CarEntity;
 import com.capgemini.domain.EmployeeEntity;
 import com.capgemini.domain.OfficeEntity;
 

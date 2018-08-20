@@ -26,4 +26,6 @@ public interface Dao<T, K extends Serializable> {
     boolean exists(K id);
 
 	void flush();
+
+	void detach(T entity);
 }
