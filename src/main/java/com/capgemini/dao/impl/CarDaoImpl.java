@@ -1,10 +1,10 @@
 package com.capgemini.dao.impl;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
 import javax.persistence.TypedQuery;
-import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -47,24 +47,63 @@ public class CarDaoImpl extends AbstractDao<CarEntity, Long> implements CarDao {
 		CarEntity carEntity = findOne(carId);
 		carEntity.addEmployeeEntityToCarEntity(employeeEntity);
 		employeeEntity.addCarEntity(carEntity);
-//		EmployeeEntity newEmployeeEntity = employeeDao.findOne(employeeEntity.getId());
-//		newEmployeeEntity.addCarEntity(carEntity);
-//		update(carEntity);
-//		employeeDao.update(newEmployeeEntity);
 
 		return carEntity;
 	}
 
 	@Override
 	public List<EmployeeEntity> findListOfEmployeesInOfficeAssignedToCar(Long officeId, Long carId) {
-		
+
 		TypedQuery<EmployeeEntity> query = entityManager
-				.createQuery("select employee from EmployeeEntity employee left join employee.carsSet as cars "
-						+ "where (employee.office.id) = :officeId AND (cars.id) = :carId", EmployeeEntity.class);
+				.createQuery(
+						"select employee from EmployeeEntity employee left join employee.carsSet as cars "
+								+ "where (employee.office.id) = :officeId AND (cars.id) = :carId",
+						EmployeeEntity.class);
 		query.setParameter("officeId", officeId);
 		query.setParameter("carId", carId);
 		return query.getResultList();
 
 	}
 
+	@Override
+	public List<CarEntity> findListOfCarsLoaned10TimesByDistinctClients(Long numberOfCarLoans) {
+
+		TypedQuery<CarEntity> query = entityManager.createQuery(
+				"select car from CarEntity car "
+						+ "where car.id IN (select carLoan.car.id from CarLoanEntity carLoan "
+							+ "group by carLoan.car.id "
+							+ "having count(distinct carLoan.client.id) >= :numberOfCarLoans)",
+				CarEntity.class);
+
+		query.setParameter("numberOfCarLoans", numberOfCarLoans);
+		return query.getResultList();
+	}
+
+	@Override
+	public Long findNumberOfCarsLoanedInTimeStartDateEndDate(Date startDate, Date endDate) {
+		TypedQuery<Long> query = entityManager
+				.createQuery(
+						"select count(car) from CarEntity car join car.carLoans carLoans "
+								+ "where carLoans.loanDate <= :startDate and carLoans.returnDate >= :endDate "
+								+ "group by car",
+						Long.class);
+		query.setParameter("startDate", startDate);
+		query.setParameter("endDate", endDate);
+		return query.getSingleResult();
+	}
+		
+		
+		@Override
+		public List<CarEntity> findCarsLoanedInTimeStartDateEndDate(Date startDate, Date endDate) {
+		TypedQuery<CarEntity> query = entityManager
+				.createQuery(
+						"select car from CarEntity car left join car.carLoans carLoans "
+								+ "where carLoans.loanDate <= :startDate and carLoans.returnDate >= :endDate",
+						CarEntity.class);
+		query.setParameter("startDate", startDate);
+		query.setParameter("endDate", endDate);
+		return query.getResultList();
+	}
+
+	
 }

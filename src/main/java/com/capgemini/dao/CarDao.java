@@ -1,5 +1,6 @@
 package com.capgemini.dao;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -13,8 +14,13 @@ public interface CarDao extends Dao<CarEntity, Long> {
 	CarEntity addAttachedEmployee(Long carId, EmployeeEntity employeeEntity);
 	
 	List<EmployeeEntity> findListOfEmployeesInOfficeAssignedToCar(Long officeId, Long carId);
+//	Integer findCarsLoanedInTimeStartDateEndDate(Date startDate, Date endDate);
+	List<CarEntity> findListOfCarsLoaned10TimesByDistinctClients(Long numberOfCarLoans);
+	Long findNumberOfCarsLoanedInTimeStartDateEndDate(Date startDate, Date endDate);
+	List<CarEntity> findCarsLoanedInTimeStartDateEndDate(Date startDate, Date endDate);
 	
 	
+		
 	
 
 }

@@ -77,6 +77,11 @@ public abstract class AbstractDao<T, K extends Serializable> implements Dao<T, K
     }
     
     @Override
+    public void detach(T entity){
+    	entityManager.detach(entity);
+    }
+    
+    @Override
     public long count() {
         return (long) entityManager.createQuery("Select count(*) from " + getDomainClassName()).getSingleResult();
     }
