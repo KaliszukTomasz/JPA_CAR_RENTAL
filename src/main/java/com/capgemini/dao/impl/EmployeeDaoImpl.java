@@ -62,14 +62,4 @@ public class EmployeeDaoImpl extends AbstractDao<EmployeeEntity, Long> implement
 		
 	}
 
-//	select employee from EmployeeEntity as employee "
-//	+ "where (employee.employeePosition) = (:employeePosition)
-	/*TypedQuery<EmployeeEntity> query = entityManager
-				.createQuery("select employee from EmployeeEntity employee left join employee.carsSet as cars "
-						+ "where (employee.office.id) = :officeId AND (cars.id) = :carId", EmployeeEntity.class);
-		query.setParameter("officeId", officeId);
-		query.setParameter("carId", carId);
-		return query.getResultList();*/
-	
-
 }

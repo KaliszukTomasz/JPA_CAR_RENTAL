@@ -1,5 +1,6 @@
 package com.capgemini.service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -33,5 +34,14 @@ public interface CarService {
 	List<EmployeeTO> findEmployeeByOfficeAndCar(OfficeTO officeTO, CarTO carTO);
 
 	int findNumberOfEmployeesAssignedToThisCar(CarTO carTO);
+
+	List<CarTO> findListOfCarsLoanedXTimesByDistinctClients(Long numberOfLoans);
+
+	Long findNumberOfCarsLoanedInTimeStartDateEndDate(Date startDate, Date endDate);
+
+	List<CarTO> findCarsLoanedInTimeStartDateEndDate(Date startDate, Date endDate);
+	
+	
+	
 
 }

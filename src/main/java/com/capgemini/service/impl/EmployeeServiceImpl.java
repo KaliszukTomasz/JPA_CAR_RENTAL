@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.capgemini.dao.EmployeeDao;
 import com.capgemini.dao.OfficeDao;
 import com.capgemini.domain.EmployeeEntity;
+import com.capgemini.enums.EmployeePosition;
 import com.capgemini.mappers.EmployeeMapper;
 import com.capgemini.service.EmployeeService;
 import com.capgemini.types.CarTO;
@@ -67,22 +68,17 @@ public class EmployeeServiceImpl implements EmployeeService {
 		return EmployeeMapper.mapEmployeeEntityList2EmployeeTOList(list);
 	}
 
+	
 	@Override
 	public List<EmployeeTO> findListOfEmployeesTakeCareOnCarQuery(CarTO carTO) {
 
 		List<EmployeeEntity> list = employeeDao.findListOfEmployeesTakeCareOnCarQuery(carTO.getId());
 		return EmployeeMapper.mapEmployeeEntityList2EmployeeTOList(list);
-
-		// TypedQuery<EmployeeEntity> query = EntityManager
-		// .createQuery("select employee from EmployeeEntity employee "
-		// + "where :carEntity MEMBER OF (employee.carSet)",
-		// EmployeeEntity.class);
-		// query.setParameter("carEntity", carDao.findOne(carId));
-		// return query.getResultList();
-
-		// List<EmployeeEntity> list =
-		// employeeDao.findListOfEmployeesTakeCareOnCarQuery(carTO.getId());
-		// return EmployeeMapper.mapEmployeeEntityList2EmployeeTOList(list);
-
+	}
+	
+	@Override
+	public List<EmployeeTO> findListOfEmployeesWorkingOnPositionQuery(EmployeePosition employeePosition) {
+		List<EmployeeEntity> list = employeeDao.findListOfEmployeesWorkingOnPositionQuery(employeePosition);
+		return EmployeeMapper.mapEmployeeEntityList2EmployeeTOList(list);
 	}
 }

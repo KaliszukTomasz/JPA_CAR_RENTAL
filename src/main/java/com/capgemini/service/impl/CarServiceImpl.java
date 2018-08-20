@@ -1,5 +1,6 @@
 package com.capgemini.service.impl;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -59,10 +60,6 @@ public class CarServiceImpl implements CarService {
 	@Override
 	public CarTO removeCarFromDatabase(CarTO carTO) {
 		CarEntity carEntity = carDao.findOne(carTO.getId());
-		// carLoanDao.delete(carLoanDao.findOne(carTO.getId()));
-		// carEntity.getCarLoans().stream().forEach(loan ->
-		// carLoanDao.delete(loan));
-		// ;
 		carDao.delete(carEntity);
 		return carTO;
 
@@ -186,7 +183,26 @@ public class CarServiceImpl implements CarService {
 		}
 
 	}
-
+	
+	@Override
+	public List<CarTO> findListOfCarsLoanedXTimesByDistinctClients(Long numberOfLoans){
+		List<CarEntity> carEntityList = carDao.findListOfCarsLoaned10TimesByDistinctClients(numberOfLoans);
+		return CarMapper.mapListCarEntities2CarTOs(carEntityList);
+	}
+	
+	@Override
+	public Long findNumberOfCarsLoanedInTimeStartDateEndDate(Date startDate, Date endDate){
+		return carDao.findNumberOfCarsLoanedInTimeStartDateEndDate(startDate, endDate);
+		
+	}
+	
+	@Override
+	public List<CarTO> findCarsLoanedInTimeStartDateEndDate(Date startDate, Date endDate) {
+		List<CarEntity> carEntityList = carDao.findCarsLoanedInTimeStartDateEndDate(startDate, endDate);
+		return CarMapper.mapListCarEntities2CarTOs(carEntityList);
+		
+	}
+	
 	@Override
 	public List<CarTO> findAllCarsInDatabase() {
 		return CarMapper.mapListCarEntities2CarTOs(carDao.findAll());
