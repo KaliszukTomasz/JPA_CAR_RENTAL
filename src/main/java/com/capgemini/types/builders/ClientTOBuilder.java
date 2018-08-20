@@ -3,6 +3,7 @@ package com.capgemini.types.builders;
 import java.util.Date;
 import java.util.Set;
 
+import com.capgemini.exceptions.IncorrectClientTOException;
 import com.capgemini.types.AddressTO;
 import com.capgemini.types.CarLoanTO;
 import com.capgemini.types.ClientTO;
@@ -81,7 +82,7 @@ public class ClientTOBuilder {
 			Integer phoneNumber, String email, Long creditCardNumber) {
 		if (firstName == null || lastName == null || address == null || dateOfBirth == null || phoneNumber == null
 				|| email == null || creditCardNumber == null) {
-			throw new RuntimeException("Incorrect officeTO to be created");
+			throw new IncorrectClientTOException("Incorrect clientTO to be created");
 		}
 	}
 

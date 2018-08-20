@@ -2,6 +2,7 @@ package com.capgemini.types.builders;
 
 import java.util.Set;
 
+import com.capgemini.exceptions.IncorrectOfficeTOException;
 import com.capgemini.types.AddressTO;
 import com.capgemini.types.CarLoanTO;
 import com.capgemini.types.CarTO;
@@ -71,7 +72,7 @@ public class OfficeTOBuilder {
 
 	private void checkBeforeBuild(Integer phoneNumber, String email, AddressTO address) {
 		if (phoneNumber == null || email == null || address == null) {
-			throw new RuntimeException("Incorrect officeTO to be created");
+			throw new IncorrectOfficeTOException("Incorrect officeTO to be created");
 		}
 	}
 }

@@ -2,6 +2,7 @@ package com.capgemini.types.builders;
 
 import java.util.Date;
 
+import com.capgemini.exceptions.IncorrectCarLoanTOException;
 import com.capgemini.types.CarLoanTO;
 import com.capgemini.types.CarTO;
 import com.capgemini.types.ClientTO;
@@ -70,7 +71,7 @@ public class CarLoanTOBuilder {
 
 	private void checkBeforeBuild(CarTO car, ClientTO client, Date loanDate, OfficeTO loanOffice) {
 		if (car == null || client == null || loanDate == null || loanOffice == null) {
-			throw new RuntimeException("Incorrect officeTO to be created");
+			throw new IncorrectCarLoanTOException("Incorrect carLoanTO to be created");
 		}
 	}
 }

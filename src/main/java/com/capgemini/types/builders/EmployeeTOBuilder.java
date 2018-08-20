@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.Set;
 
 import com.capgemini.enums.EmployeePosition;
+import com.capgemini.exceptions.IncorrectEmployeeTOException;
 import com.capgemini.types.CarTO;
 import com.capgemini.types.EmployeeTO;
 import com.capgemini.types.OfficeTO;
@@ -66,7 +67,7 @@ public class EmployeeTOBuilder {
 
 	private void checkBeforeBuild(String firstName, String lastName, Date dateOfBirth, OfficeTO office) {
 		if (firstName == null || lastName == null || dateOfBirth == null || office == null) {
-			throw new RuntimeException("Incorrect employeeTO to be created");
+			throw new IncorrectEmployeeTOException("Incorrect employeeTO to be created");
 		}
 	}
 }

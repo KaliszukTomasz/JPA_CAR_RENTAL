@@ -1,5 +1,6 @@
 package com.capgemini.types.builders;
 
+import com.capgemini.exceptions.IncorrectAddressException;
 import com.capgemini.types.AddressTO;
 
 /**
@@ -34,7 +35,7 @@ public class AddressTOBuilder {
     }
     private void checkBeforeBuild(String city, String zipCode, String streetAddress) {
 		if (city == null || zipCode == null || streetAddress == null ) {
-			throw new RuntimeException("Incorrect address to be created");
+			throw new IncorrectAddressException("Incorrect address to be created");
 		}
 
 	}

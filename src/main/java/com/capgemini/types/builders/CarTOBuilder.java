@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.capgemini.domain.EmployeeEntity;
-
+import com.capgemini.exceptions.IncorrectCarTOException;
 import com.capgemini.types.CarTO;
 import com.capgemini.types.OfficeTO;
 
@@ -78,17 +78,16 @@ public class CarTOBuilder {
 	}
 
 	public CarTO buildCarTO() {
-		checkBeforeBuild(carType, brand, yearOfProduction, color, engineCapacity, enginePower, mileage,
-				currentLocation);
+		checkBeforeBuild(carType, brand, yearOfProduction, color, engineCapacity, enginePower, mileage);
 		return new CarTO(id, carType, brand, yearOfProduction, color, engineCapacity, enginePower, mileage,
 				currentLocation, employeesSet);
 	}
 
 	private void checkBeforeBuild(String carType, String brand, Year yearOfProduction, String color,
-			Integer engineCapacity, Integer enginePower, Integer mileage, OfficeTO currentLocation) {
+			Integer engineCapacity, Integer enginePower, Integer mileage) {
 		if (carType == null || brand == null || yearOfProduction == null || color == null || engineCapacity == null
-				|| enginePower == null || mileage == null || currentLocation == null) {
-			throw new RuntimeException("Incorrect officeTO to be created");
+				|| enginePower == null || mileage == null ) {
+			throw new IncorrectCarTOException("Incorrect carTO to be created");
 		}
 	}
 }
