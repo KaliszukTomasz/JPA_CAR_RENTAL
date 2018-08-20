@@ -1,66 +1,51 @@
 package com.capgemini.service;
 
+import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
-import java.text.DateFormat;
-import java.time.Instant;
-import java.time.Year;
-import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.swing.border.EmptyBorder;
 import javax.transaction.Transactional;
 
-import org.aspectj.weaver.tools.cache.CachedClassEntry;
-import org.hamcrest.collection.IsEmptyCollection;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.Assert.assertThat;
-import static org.hamcrest.Matchers.empty;
-import static org.hamcrest.core.Is.is;
-import static org.hamcrest.core.IsNot.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.annotation.DirtiesContext.ClassMode;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.capgemini.dao.CarDao;
-import com.capgemini.dao.EmployeeDao;
+import com.capgemini.dao.CarLoanDao;
+import com.capgemini.dao.ClientDao;
 import com.capgemini.dao.OfficeDao;
-import com.capgemini.domain.AddressEntity;
 import com.capgemini.domain.CarEntity;
-import com.capgemini.domain.EmployeeEntity;
-import com.capgemini.domain.OfficeEntity;
-import com.capgemini.enums.EmployeePosition;
-import com.capgemini.mappers.EmployeeMapper;
-import com.capgemini.types.AddressTO;
+import com.capgemini.domain.CarLoanEntity;
+import com.capgemini.domain.ClientEntity;
 import com.capgemini.types.CarTO;
 import com.capgemini.types.EmployeeTO;
 import com.capgemini.types.OfficeTO;
-import com.capgemini.types.builders.CarTOBuilder;
-import com.capgemini.types.builders.EmployeeTOBuilder;
-import com.capgemini.types.builders.OfficeTOBuilder;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(properties = "spring.profiles.active=hsql")
-public class CarServiceTest {
+public class CarServiceTest extends AbstractTest {
 
 	@Autowired
 	private CarService carService;
 	@Autowired
 	private CarDao carDao;
 	@Autowired
-	private EmployeeDao employeeDao;
-	@Autowired
 	private EmployeeService employeeService;
 	@Autowired
 	private OfficeService officeService;
 	@Autowired
 	private OfficeDao officeDao;
+	@Autowired
+	private ClientDao clientDao;
+	@Autowired
+	private CarLoanDao carLoanDao;
 
 	@Test
 	public void shouldAddAndRemoveCarToFromDatabaseTest() {
@@ -118,16 +103,15 @@ public class CarServiceTest {
 	@Test
 	public void addEmployeeToCar() {
 		// given
-		int carDaoStartSize = carDao.findAll().size();
 		CarTO carTO = carService.addCarToDatabase(buildCarTO());
-		assertThat(carService.findNumberOfEmployeesAssignedToThisCar(carTO) - carDaoStartSize, is(0));
+		assertThat(carService.findNumberOfEmployeesAssignedToThisCar(carTO), is(0));
 
 		// when
 		EmployeeTO employeeTO = employeeService.addEmployeeTODatabase(buildEmployeeTO());
 		carService.addEmployeeToCar(carTO, employeeTO);
 
 		// then
-		assertThat(carService.findNumberOfEmployeesAssignedToThisCar(carTO) - carDaoStartSize, is(1));
+		assertThat(carService.findNumberOfEmployeesAssignedToThisCar(carTO), is(1));
 	}
 
 	@Test
@@ -135,8 +119,8 @@ public class CarServiceTest {
 		// given
 		CarTO carTO = buildCarTO();
 		int carTOListStartSize = carService.findCarByBrandAndType(carTO).size();
-		CarTO carTO2 = carService.addCarToDatabase(buildCarTO());
-		CarTO carTO3 = carService.addCarToDatabase(buildSecoundCarTO());
+		carService.addCarToDatabase(buildCarTO());
+		carService.addCarToDatabase(buildSecoundCarTO());
 
 		// when
 		List<CarTO> carTOList = carService.findCarByBrandAndType(carTO);
@@ -222,33 +206,111 @@ public class CarServiceTest {
 
 	}
 
-	private CarTO buildCarTO() {
-		CarTO carTO = new CarTOBuilder().setCarType("sedan").setCurrentLocation(buildOfficeTO()).setBrand("BMW")
-				.setYearOfProduction(Year.of(1995)).setColor("red").setEngineCapacity(1600).setEnginePower(100)
-				.setMileage(100000).buildCarTO();
-		return carTO;
+	@Test
+	@Transactional
+	public void shouldFindCarsWitchThreeOrMoreCarLoans() {
+		// given
+
+		ClientEntity clientEntity1 = clientDao.save(buildClientEntity());
+		ClientEntity clientEntity2 = clientDao.save(buildClientEntity());
+		ClientEntity clientEntity3 = clientDao.save(buildClientEntity());
+
+		CarLoanEntity carLoanEntityTemp1 = buildCarLoanEntity();
+		carLoanEntityTemp1.setClient(clientDao.findOne(clientEntity1.getId()));
+		CarLoanEntity carLoanEntityTemp2 = buildCarLoanEntity();
+		carLoanEntityTemp2.setClient(clientDao.findOne(clientEntity2.getId()));
+		CarLoanEntity carLoanEntityTemp3 = buildCarLoanEntity();
+		carLoanEntityTemp3.setClient(clientDao.findOne(clientEntity3.getId()));
+
+		CarLoanEntity carLoanEntity1 = carLoanDao.save(carLoanEntityTemp1);
+		CarLoanEntity carLoanEntity2 = carLoanDao.save(carLoanEntityTemp2);
+		CarLoanEntity carLoanEntity3 = carLoanDao.save(carLoanEntityTemp3);
+
+		CarEntity carEntity = buildCarEntity();
+		carEntity.addCarLoan(carLoanEntity1);
+		carEntity.addCarLoan(carLoanEntity2);
+		carEntity.addCarLoan(carLoanEntity3);
+
+		// when
+		CarEntity carEntity2 = carDao.save(carEntity);
+
+		// then
+		assertThat(carDao.findOne(carEntity2.getId()).getCarLoans().size(), is(3));
+		assertThat(carService.findListOfCarsLoanedXTimesByDistinctClients(3L).size(), is(1));
 
 	}
 
-	private CarTO buildSecoundCarTO() {
+	@Test
+	public void shouldFindNumberOfCarsLoanedInTimeStartDateEndDate() {
 
-		CarTO carTO = new CarTOBuilder().setCarType("kombi").setCurrentLocation(buildOfficeTO()).setBrand("Mercedes")
-				.setYearOfProduction(Year.of(2000)).setColor("blue").setEngineCapacity(2000).setEnginePower(200)
-				.setMileage(200000).buildCarTO();
-		return carTO;
+		CarEntity carEntity = carDao.save(buildCarEntity());
+		CarLoanEntity carLoanEntity = carLoanDao.save(buildCarLoanEntityWithDays());
+		carEntity.addCarLoan(carLoanEntity);
+
+		// when
+		carEntity = carDao.update(carEntity);
+		carLoanDao.update(carLoanEntity);
+
+		// then
+
+		assertThat(carService.findCarsLoanedInTimeStartDateEndDate(java.sql.Date.valueOf("2018-01-01"),
+				java.sql.Date.valueOf("2018-01-02")).size(), is(1));
+
+		assertThat(carService.findNumberOfCarsLoanedInTimeStartDateEndDate(java.sql.Date.valueOf("2018-01-01"),
+				java.sql.Date.valueOf("2018-01-02")), is(1L));
+	}
+
+	@Test
+	@Transactional
+	public void optimisticLokingTest() {
+		// given
+		ClientEntity clientEntity = buildClientEntity();
+		clientEntity = clientDao.save(clientEntity);
+		clientDao.flush();
+		clientDao.detach(clientEntity);
+		clientEntity.setFirstName("Tomek");
+
+		ClientEntity newClientEntity = clientDao.findOne(clientEntity.getId());
+
+		newClientEntity.setFirstName("first name");
+		clientDao.save(newClientEntity);
+		clientDao.flush();
+
+		// when
+		try {
+			ClientEntity clientEntity2 = clientDao.update(clientEntity);
+			clientDao.save(clientEntity2);
+
+			// then
+			Assert.fail("Expected that optimistoc loking not working");
+
+		} catch (ObjectOptimisticLockingFailureException e) {
+			// Test pass. We expected optimistoc loking exception.
+		}
 
 	}
 
-	private EmployeeTO buildEmployeeTO() {
-
-		return new EmployeeTOBuilder().setDateOfBirth(new Date("10/11/1959")).setFirstName("Adam").setEmployeePosition(EmployeePosition.DEALER)
-				.setLastName("Kowalski").setOffice(buildOfficeTO()).buildEmployeeTO();
+	@Test
+	public void builderTest() {
+		buildCarLoanTO();
+		buildCarTO();
+		buildClientTO();
+		buildEmployeeTO();
+		buildOfficeTO();
+		buildSecoundCarTO();
+		buildAddressTO();
 	}
 
-	private OfficeTO buildOfficeTO() {
-		OfficeTO officeTO = new OfficeTOBuilder().setAddress(new AddressTO("Poznan", "61-251", "Polna"))
-				.setEmail("biuro@gmail.com").setPhoneNumber(745215321).buildOfficeTO();
-		return officeTO;
+	private CarLoanEntity buildCarLoanEntityWithDays() {
+		CarLoanEntity carLoanEntityTemp = buildCarLoanEntity();
+		carLoanEntityTemp.setLoanDate(java.sql.Date.valueOf("2018-01-01"));
+		carLoanEntityTemp.setReturnDate(java.sql.Date.valueOf("2018-01-03"));
+		return carLoanEntityTemp;
+	}
+
+	private CarLoanEntity buildCarLoanEntity() {
+		return new CarLoanEntity(null, clientDao.findOne(1L), java.sql.Date.valueOf("2018-05-05"),
+				java.sql.Date.valueOf("2018-05-05"), officeDao.findOne(1L), officeDao.findOne(1L), 200);
 	}
 
 }
