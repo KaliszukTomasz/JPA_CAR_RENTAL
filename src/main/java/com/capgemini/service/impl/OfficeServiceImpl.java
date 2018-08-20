@@ -42,8 +42,9 @@ public class OfficeServiceImpl implements OfficeService {
 			OfficeEntity officeEntity = officeDao.save(OfficeMapper.map2OfficeEntity(officeTO));
 			officeTO.setId(officeEntity.getId());
 			return officeTO;
-		} else
+		} else {
 			throw new IllegalArgumentException();
+		}
 	}
 
 	/*
@@ -124,9 +125,6 @@ public class OfficeServiceImpl implements OfficeService {
 		EmployeeEntity employeeEntity = employeeDao.findOne(employeeTO.getId());
 		OfficeEntity officeEntity = officeDao.findOne(officeTO.getId());
 		officeEntity.removeEmployeeEntity(employeeEntity);
-		// employeeEntity.setOffice(null);
-		// employeeDao.update(employeeEntity);
-		// officeDao.update(officeEntity);
 		return EmployeeMapper.map2EmployeeTO(employeeEntity);
 	}
 

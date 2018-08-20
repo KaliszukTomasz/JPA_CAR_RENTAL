@@ -17,8 +17,7 @@ public class AddressEntity {
 	@Column(nullable = false, length = 30)
 	private String streetAddress;
 
-	public AddressEntity() {
-	}
+	
 
 	public String getCity() {
 		return city;

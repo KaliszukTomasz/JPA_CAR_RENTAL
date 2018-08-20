@@ -7,16 +7,17 @@ import java.util.stream.Collectors;
 import com.capgemini.domain.EmployeeEntity;
 import com.capgemini.types.EmployeeTO;
 
-
-
 /**
  * @author TKALISZU
  *
- * Description:
- * EmployeeMapper has 4 methods.
- * Can map EmployeeTO to EmployeeEntity, EmployeeEntity to EmployeeTO and Set/List of EmployeeEntities to Set/List EmployeeTO.
+ *         Description: EmployeeMapper has 4 methods. Can map EmployeeTO to
+ *         EmployeeEntity, EmployeeEntity to EmployeeTO and Set/List of
+ *         EmployeeEntities to Set/List EmployeeTO.
  */
 public class EmployeeMapper {
+
+	private EmployeeMapper() {
+	}
 
 	public static EmployeeEntity map2EmployeeEntity(EmployeeTO eTO) {
 
@@ -46,7 +47,7 @@ public class EmployeeMapper {
 
 	public static Set<EmployeeTO> mapEmployeeEntitySet2EmployeeTOSet(Set<EmployeeEntity> emplEntitySet) {
 
-		Set<EmployeeTO> employeeTOSet = emplEntitySet.stream().map(temp -> {
+		return emplEntitySet.stream().map(temp -> {
 			EmployeeTO empTO = new EmployeeTO();
 			empTO.setId(temp.getId());
 			empTO.setFirstName(temp.getFirstName());
@@ -56,12 +57,11 @@ public class EmployeeMapper {
 
 		}).collect(Collectors.toSet());
 
-		return employeeTOSet;
 	}
-	
+
 	public static List<EmployeeTO> mapEmployeeEntityList2EmployeeTOList(List<EmployeeEntity> emplEntityList) {
 
-		List<EmployeeTO> employeeTOList = emplEntityList.stream().map(temp -> {
+		return emplEntityList.stream().map(temp -> {
 			EmployeeTO empTO = new EmployeeTO();
 			empTO.setId(temp.getId());
 			empTO.setFirstName(temp.getFirstName());
@@ -71,6 +71,5 @@ public class EmployeeMapper {
 
 		}).collect(Collectors.toList());
 
-		return employeeTOList;
 	}
 }

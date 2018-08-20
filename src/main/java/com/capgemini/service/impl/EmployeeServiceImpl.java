@@ -16,6 +16,10 @@ import com.capgemini.types.CarTO;
 import com.capgemini.types.EmployeeTO;
 import com.capgemini.types.OfficeTO;
 
+/**
+ * @author TKALISZU
+ *
+ */
 @Service
 @Transactional
 public class EmployeeServiceImpl implements EmployeeService {
@@ -68,14 +72,32 @@ public class EmployeeServiceImpl implements EmployeeService {
 		return EmployeeMapper.mapEmployeeEntityList2EmployeeTOList(list);
 	}
 
-	
+	/*
+	 * findListOfEmployeesTakeCareOnCarQuery find list of employees assigned to
+	 * car with id = carTO.id
+	 * 
+	 * @param CarTO carTO
+	 * 
+	 * @see com.capgemini.service.EmployeeService#
+	 * findListOfEmployeesTakeCareOnCarQuery(com.capgemini.types.CarTO)
+	 */
 	@Override
 	public List<EmployeeTO> findListOfEmployeesTakeCareOnCarQuery(CarTO carTO) {
 
 		List<EmployeeEntity> list = employeeDao.findListOfEmployeesTakeCareOnCarQuery(carTO.getId());
 		return EmployeeMapper.mapEmployeeEntityList2EmployeeTOList(list);
 	}
-	
+
+	/*
+	 * findListOfEmployeesWorkingOnPositionQuery find list of employees on
+	 * position from enum (MANAGER, ACCOUNTANT, DEALER
+	 * 
+	 * @param EmployeePosition employeePosition
+	 * 
+	 * @see com.capgemini.service.EmployeeService#
+	 * findListOfEmployeesWorkingOnPositionQuery(com.capgemini.enums.
+	 * EmployeePosition)
+	 */
 	@Override
 	public List<EmployeeTO> findListOfEmployeesWorkingOnPositionQuery(EmployeePosition employeePosition) {
 		List<EmployeeEntity> list = employeeDao.findListOfEmployeesWorkingOnPositionQuery(employeePosition);

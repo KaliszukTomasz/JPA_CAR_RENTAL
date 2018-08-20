@@ -6,11 +6,13 @@ import com.capgemini.types.OfficeTO;
 /**
  * @author TKALISZU
  *
- * Description:
- * OfficeMapper has two methods.
- * Can map OfficeTO to OfficeEntity and OfficeEntity to OfficeTO.
+ *         Description: OfficeMapper has two methods. Can map OfficeTO to
+ *         OfficeEntity and OfficeEntity to OfficeTO.
  */
 public class OfficeMapper {
+
+	private OfficeMapper() {
+	}
 
 	public static OfficeEntity map2OfficeEntity(OfficeTO oTO) {
 		if (oTO == null) {

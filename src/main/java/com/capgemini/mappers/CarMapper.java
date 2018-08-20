@@ -7,14 +7,15 @@ import java.util.stream.Collectors;
 import com.capgemini.domain.CarEntity;
 import com.capgemini.types.CarTO;
 
-
 /**
  * @author TKALISZU
  * 
- * Description:
- * CarMapper has 3 methods to map carTO to carEntity and to map list and set of carEntities to list/set of carTO.
+ *         Description: CarMapper has 3 methods to map carTO to carEntity and to
+ *         map list and set of carEntities to list/set of carTO.
  */
 public class CarMapper {
+	private CarMapper() {
+	}
 
 	public static CarEntity map2CarEntity(CarTO carTO) {
 		CarEntity carE = new CarEntity();
@@ -27,13 +28,12 @@ public class CarMapper {
 		carE.setMileage(carTO.getMileage());
 		carE.setCurrentLocation(OfficeMapper.map2OfficeEntity(carTO.getCurrentLocation()));
 
-
 		return carE;
 	}
 
 	public static List<CarTO> mapListCarEntities2CarTOs(List<CarEntity> list) {
 
-		List<CarTO> listCarTO = list.stream().map(temp -> {
+		return list.stream().map(temp -> {
 			CarTO carTO = new CarTO();
 			carTO.setId(temp.getId());
 			carTO.setColor(temp.getColor());
@@ -44,12 +44,11 @@ public class CarMapper {
 			return carTO;
 		}).collect(Collectors.toList());
 
-		return listCarTO;
 	}
-	
+
 	public static Set<CarTO> mapSetCarEntities2CarTOs(Set<CarEntity> carSet) {
 
-		Set<CarTO> carTOSet = carSet.stream().map(temp -> {
+		return carSet.stream().map(temp -> {
 			CarTO carTO = new CarTO();
 			carTO.setId(temp.getId());
 			carTO.setColor(temp.getColor());
@@ -60,7 +59,6 @@ public class CarMapper {
 			return carTO;
 		}).collect(Collectors.toSet());
 
-		return carTOSet;
 	}
 
 }

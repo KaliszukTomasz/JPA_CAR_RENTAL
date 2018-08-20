@@ -8,8 +8,4 @@ public interface CarLoanDao extends Dao<CarLoanEntity, Long> {
 
 	void addNewCarLoanToDatabase(CarLoanEntity carLoanEntity, ClientEntity clientEntity, CarEntity carEntity);
 
-	//TODO
-	
-	
-	
 }

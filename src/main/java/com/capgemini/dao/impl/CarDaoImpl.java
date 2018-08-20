@@ -94,7 +94,7 @@ public class CarDaoImpl extends AbstractDao<CarEntity, Long> implements CarDao {
 		
 		
 		@Override
-		public List<CarEntity> findCarsLoanedInTimeStartDateEndDate(Date startDate, Date endDate) {
+	public List<CarEntity> findCarsLoanedInTimeStartDateEndDate(Date startDate, Date endDate) {
 		TypedQuery<CarEntity> query = entityManager
 				.createQuery(
 						"select car from CarEntity car left join car.carLoans carLoans "

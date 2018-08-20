@@ -134,8 +134,9 @@ public class CarServiceImpl implements CarService {
 		if (carTO.getBrand() != null && carTO.getCarType() != null) {
 			List<CarEntity> carEntityList = carDao.findCarByBrandAndType(carTO.getBrand(), carTO.getCarType());
 			return CarMapper.mapListCarEntities2CarTOs(carEntityList);
-		} else
+		} else {
 			throw new IllegalArgumentException();
+		}
 	}
 
 	/*
@@ -183,26 +184,55 @@ public class CarServiceImpl implements CarService {
 		}
 
 	}
-	
+
+	/*
+	 * findListOfCarsLoanedXTimesByDistinctClients find list of cars which are
+	 * loaned X times by distinct clients
+	 * 
+	 * @param Long numberOfLoans
+	 * 
+	 * @see com.capgemini.service.CarService#
+	 * findListOfCarsLoanedXTimesByDistinctClients(java.lang.Long)
+	 */
 	@Override
-	public List<CarTO> findListOfCarsLoanedXTimesByDistinctClients(Long numberOfLoans){
+	public List<CarTO> findListOfCarsLoanedXTimesByDistinctClients(Long numberOfLoans) {
 		List<CarEntity> carEntityList = carDao.findListOfCarsLoaned10TimesByDistinctClients(numberOfLoans);
 		return CarMapper.mapListCarEntities2CarTOs(carEntityList);
 	}
-	
+
+	/*
+	 * findNumberOfCarsLoanedInTimeStartDateEndDate find how many cars was
+	 * loaned in period of time (startDate, endDate)
+	 * 
+	 * @param Date startDate
+	 * 
+	 * @param Date endDate
+	 * 
+	 * @see com.capgemini.service.CarService#
+	 * findNumberOfCarsLoanedInTimeStartDateEndDate(java.util.Date,
+	 * java.util.Date)
+	 */
 	@Override
-	public Long findNumberOfCarsLoanedInTimeStartDateEndDate(Date startDate, Date endDate){
+	public Long findNumberOfCarsLoanedInTimeStartDateEndDate(Date startDate, Date endDate) {
 		return carDao.findNumberOfCarsLoanedInTimeStartDateEndDate(startDate, endDate);
-		
+
 	}
-	
+
+	/*
+	 * findCarsLoanedInTimeStartDateEndDate find list of cars which was loaned
+	 * in period of time (startDate, endDate)
+	 * 
+	 * @see
+	 * com.capgemini.service.CarService#findCarsLoanedInTimeStartDateEndDate(
+	 * java.util.Date, java.util.Date)
+	 */
 	@Override
 	public List<CarTO> findCarsLoanedInTimeStartDateEndDate(Date startDate, Date endDate) {
 		List<CarEntity> carEntityList = carDao.findCarsLoanedInTimeStartDateEndDate(startDate, endDate);
 		return CarMapper.mapListCarEntities2CarTOs(carEntityList);
-		
+
 	}
-	
+
 	@Override
 	public List<CarTO> findAllCarsInDatabase() {
 		return CarMapper.mapListCarEntities2CarTOs(carDao.findAll());

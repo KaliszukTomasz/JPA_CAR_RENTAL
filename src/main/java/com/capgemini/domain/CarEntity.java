@@ -58,7 +58,7 @@ public class CarEntity {
 	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	private OfficeEntity currentLocation;
 
-	@OneToMany(mappedBy = "car", cascade ={ CascadeType.PERSIST,CascadeType.REMOVE }, orphanRemoval = true)
+	@OneToMany(mappedBy = "car", cascade = { CascadeType.PERSIST, CascadeType.REMOVE }, orphanRemoval = true)
 	private Set<CarLoanEntity> carLoans = new HashSet<>();
 
 	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
@@ -189,8 +189,9 @@ public class CarEntity {
 		if (carLoans.remove(carLoanEntity)) {
 			carLoanEntity.setCar(null);
 			return carLoanEntity;
-		} else
+		} else {
 			throw new NoSuchElementException();
+		}
 	}
 
 	public void addEmployeeEntityToCarEntity(EmployeeEntity employeeEntity) {

@@ -30,6 +30,11 @@ public class EmployeeDaoImpl extends AbstractDao<EmployeeEntity, Long> implement
 	@Override
 	public void removeEmployeeFromOffice(Long officeId, Long employeeId) {
 
+		EmployeeEntity employeeEntity = findOne(employeeId);
+		OfficeEntity officeEntity = officeDao.findOne(officeId);
+		officeEntity.removeEmployeeEntity(employeeEntity);
+		employeeEntity.setOffice(null);
+
 	}
 
 	@Override
@@ -53,13 +58,12 @@ public class EmployeeDaoImpl extends AbstractDao<EmployeeEntity, Long> implement
 
 	@Override
 	public List<EmployeeEntity> findListOfEmployeesWorkingOnPositionQuery(EmployeePosition employeePosition) {
-		
-		TypedQuery<EmployeeEntity> query = entityManager.createQuery(
-				"select employee from EmployeeEntity employee "
+
+		TypedQuery<EmployeeEntity> query = entityManager.createQuery("select employee from EmployeeEntity employee "
 				+ "where (employee.employeePosition) IN (:employeePosition)", EmployeeEntity.class);
-			query.setParameter("employeePosition", employeePosition);
-			return query.getResultList();
-		
+		query.setParameter("employeePosition", employeePosition);
+		return query.getResultList();
+
 	}
 
 }
